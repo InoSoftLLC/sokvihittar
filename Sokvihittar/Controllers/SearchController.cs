@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
+﻿using System.Web.Http;
 
 namespace Sokvihittar.Controllers
 {
     public class SearchController : ApiController
     {
         // GET /api/search/?text=bmv x5
-        public string Get(string text)
+        public string Get(string text, int limit)
         {
             // тут надо вызов твоей бибилиотеки вставить
-            return "Search results for : " + text;
+            return AllaannonserCrawler.AllaannonserCrawler.Search(text, limit);
         }
     }
 }
