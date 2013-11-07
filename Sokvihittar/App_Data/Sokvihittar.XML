@@ -401,9 +401,17 @@
             Search API
             </summary>
         </member>
-        <member name="M:Sokvihittar.Controllers.SearchController.Get(System.String,System.Int32)">
+        <member name="M:Sokvihittar.Controllers.SearchController.Allaannonser(System.String,System.Int32)">
             <summary>
             Searches for items on http://www.allaannonser.se
+            </summary>
+            <param name="text"></param>
+            <param name="limit"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sokvihittar.Controllers.SearchController.Pricerunner(System.String,System.Int32)">
+            <summary>
+            Searches for items on http://www.pricerunner.se
             </summary>
             <param name="text"></param>
             <param name="limit"></param>
