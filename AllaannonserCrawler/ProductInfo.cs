@@ -2,7 +2,6 @@
 
 namespace AllaannonserCrawler
 {
-     
     [DataContract]
     public class ProductInfo
     {

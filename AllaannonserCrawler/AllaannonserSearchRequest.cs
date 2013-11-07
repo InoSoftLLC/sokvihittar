@@ -27,6 +27,7 @@ namespace AllaannonserCrawler
                 HttpUtility.UrlEncode(_productText));
             }
         }
+
         public ProductInfo[] ProceedSearchRequest()
         {
             var products = new List<ProductInfo>();
