@@ -298,9 +298,9 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AllaannonserCrawler\AllaannonserCrawler.csproj">
+    <ProjectReference Include="..\AllaannonserCrawler\Sokvihittar.Crawlers.csproj">
       <Project>{51CEAA3B-39F1-4F57-9E85-DF95B42653F7}</Project>
-      <Name>AllaannonserCrawler</Name>
+      <Name>Sokvihittar.Crawlers</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

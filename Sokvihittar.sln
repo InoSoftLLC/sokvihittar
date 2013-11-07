@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sokvihittar", "Sokvihittar\Sokvihittar.csproj", "{673256A1-0B71-4A5D-949E-F382415ABFCE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AllaannonserCrawler", "AllaannonserCrawler\AllaannonserCrawler.csproj", "{51CEAA3B-39F1-4F57-9E85-DF95B42653F7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sokvihittar.Crawlers", "AllaannonserCrawler\Sokvihittar.Crawlers.csproj", "{51CEAA3B-39F1-4F57-9E85-DF95B42653F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

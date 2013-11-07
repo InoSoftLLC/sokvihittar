@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace AllaannonserCrawler
+namespace Sokvihittar.Crawlers.Common
 {
     [DataContract]
     public class ProductInfo
@@ -9,7 +9,7 @@ namespace AllaannonserCrawler
         public string Date { get; set; }
 
         [DataMember(Name = "domain")]
-        public string Domain { get { return "www.allaannonser.se"; } set { } }
+        public string Domain { get; set; }
 
         [DataMember(Name = "id")]
         public string Id { get; set; }

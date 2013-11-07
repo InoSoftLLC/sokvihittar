@@ -2,9 +2,9 @@
 using System.Net;
 using System.Text;
 
-namespace Sokvihittar.Common
+namespace Sokvihittar.Crawlers.Common
 {
-    public static class WebHelper
+    public static class WebRequestHelper
     {
         public static string GetResponseHtml(string url)
         {
@@ -17,7 +17,7 @@ namespace Sokvihittar.Common
             var sb = new StringBuilder();
             var buf = new byte[8192];
             Stream resStream = response.GetResponseStream();
-            int count = 0;
+            int count;
             do
             {
                 count = resStream.Read(buf, 0, buf.Length);

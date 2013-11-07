@@ -1,5 +1,6 @@
 ﻿using System.Web.Http;
-using AllaannonserCrawler;
+using Sokvihittar.Crawlers;
+using Sokvihittar.Crawlers.Common;
 
 namespace Sokvihittar.Controllers
 {
@@ -11,25 +12,27 @@ namespace Sokvihittar.Controllers
         /// <summary>
         /// Searches for items on http://www.allaannonser.se
         /// </summary>
-        /// <param name="text"></param>
-        /// <param name="limit"></param>
-        /// <returns></returns>
-        [HttpGet]
+        /// <param name="text">Search text.</param>
+        /// <param name="limit">Product limit count.</param>
+        /// <returns>Array of product info models.</returns>
+        [HttpGet]        
         public ProductInfo[] Allaannonser(string text, int limit)
         {
-            return AllaannonserCrawler.AllaannonserCrawler.Search(text, limit);
+            var request = new AllaannonserCrawlerRequest(text, limit);
+            return request.ProceedSearchRequest();
         }
 
         /// <summary>
-        /// Searches for items on http://www.pricerunner.se
+        /// Searches for product items on http://www.pricerunner.se/
         /// </summary>
-        /// <param name="text"></param>
-        /// <param name="limit"></param>
-        /// <returns></returns>
+        /// <param name="text">Search text.</param>
+        /// <param name="limit">Product limit count.</param>
+        /// <returns>Array of product info models.</returns>
         [HttpGet]
         public ProductInfo[] Pricerunner(string text, int limit)
         {
-            return new[]{new ProductInfo() };
+            var request = new PriceRunnerCrawlerRequest(text, limit);
+            return request.ProceedSearchRequest();
         }
     }
 }
