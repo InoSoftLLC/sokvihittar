@@ -161,7 +161,7 @@ namespace Sokvihittar.Crawlers
                 Date = "No date",
                 ProductUrl = HttpUtility.HtmlDecode(productUrl),
                 Name = HttpUtility.HtmlDecode(title),
-                Price =HttpUtility.HtmlDecode(priceNode.InnerText).Trim(),
+                Price = HttpUtility.HtmlDecode(priceNode.InnerText).Replace("\t", "").Replace("\n", ""),
                 Id = productId,
                 Location = "No location",
                 Domain = "www.pricerunner.se"

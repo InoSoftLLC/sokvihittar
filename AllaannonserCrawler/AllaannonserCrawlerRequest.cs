@@ -72,7 +72,7 @@ namespace Sokvihittar.Crawlers
                     Date = date,
                     ProductUrl = HttpUtility.HtmlDecode(productUrl),
                     Name = HttpUtility.HtmlDecode(title),
-                    Price = HttpUtility.HtmlDecode(priceNode.InnerText),
+                    Price = HttpUtility.HtmlDecode(priceNode.InnerText).Replace("\t", "").Replace("\n", ""),
                     Id = productId,
                     Location = HttpUtility.HtmlDecode(location),
                     Domain = "www.allaannonser.se"
