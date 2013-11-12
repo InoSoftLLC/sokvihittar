@@ -31,7 +31,6 @@ namespace Sokvihittar.Crawlers.Common
 
         public static HttpWebResponse GetResponse(string url)
         {
-
             var request = (HttpWebRequest)WebRequest.Create(url);
             return (HttpWebResponse)request.GetResponse();
         }

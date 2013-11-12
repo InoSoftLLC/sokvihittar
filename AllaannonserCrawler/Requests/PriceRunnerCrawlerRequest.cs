@@ -5,21 +5,15 @@ using System.Web;
 using HtmlAgilityPack;
 using Sokvihittar.Crawlers.Common;
 
-namespace Sokvihittar.Crawlers
+namespace Sokvihittar.Crawlers.Requests
 {
    public class PriceRunnerCrawlerRequest :CrawlerRequest
     {
-        private readonly string _firstResponseUrl ;
         private bool _isCategorizied;
+       private bool _categorizedDesign;
 
-        public PriceRunnerCrawlerRequest(string productText, int limit) : base(productText, limit)
+       public PriceRunnerCrawlerRequest(string productText, int limit) : base(productText, limit)
         {
-            var firstResponse =WebRequestHelper.GetResponse(String.Format(
-                    "http://www.pricerunner.se/search?q={0}&numberOfProducts=60",
-                    HttpUtility.UrlEncode(ProductText)));
-            FirstResponseHtml = new HtmlDocument();
-            _firstResponseUrl = firstResponse.ResponseUri.OriginalString;
-            FirstResponseHtml.LoadHtml(WebRequestHelper.GetResponseHtml(firstResponse));
         }
 
        public string GetCategoryLink(HtmlNode node)
@@ -54,6 +48,21 @@ namespace Sokvihittar.Crawlers
             }
             return result.Take(Limit).ToArray();
         }
+
+       public override string SourceName
+       {
+           get { return "Pricerunner"; }
+       }
+
+       protected override string FirstRequestUrl
+       {
+           get
+           {
+               return String.Format(
+                   "http://www.pricerunner.se/search?q={0}&numberOfProducts=60",
+                   HttpUtility.UrlEncode(ProductText));
+           }
+       }
 
        private void ProccedResultPage(List<HtmlNode> productNodes, List<ProductInfo> result)
        {
@@ -91,7 +100,7 @@ namespace Sokvihittar.Crawlers
                        continue;
                    var priceNode = productNode.SelectSingleNode(".//td[@class='price']").SelectNodes(".//div").FirstOrDefault();
                    if (priceNode==null)
-                       continue;;
+                       continue;
                    var productId = productUrl.Split(';')[2].Replace("oi=", "").Replace("&amp", "");
                    var date = productNode.ChildNodes.Last(el => el.Name == "td").SelectSingleNode(".//p[@class='date']").InnerText;
                    result.Add(new ProductInfo
@@ -123,7 +132,13 @@ namespace Sokvihittar.Crawlers
             {
                 return false;
             }
-            return  node.GetAttributeValue("class", "no attribute")== "product clearfix";
+           if (node.GetAttributeValue("class", "no attribute") != "product clearfix") return false;
+           if (node.SelectSingleNode(".//div[@class='productinfobody withretailerlogo']") != null)
+           {
+               _categorizedDesign = true;
+               return false;
+           }
+           return true;
         }
 
 
@@ -142,36 +157,70 @@ namespace Sokvihittar.Crawlers
 
         protected override ProductInfo GetProductInfoFromNode(HtmlNode node)
         {
-            var titleNode = node.SelectSingleNode(".//div[@class='product-wrapper']")
-                .ChildNodes.First(el => el.GetAttributeValue("class", "no class") == "no class" && el.Name=="p").SelectSingleNode(".//a[@target='_blank']");
-            var title = titleNode.GetAttributeValue("title", "No title");
-            if(title == "No title")
-                throw new Exception("Invalid node data");
-            var productUrl = titleNode.GetAttributeValue("href", "No url");
-            if (productUrl == "No url")
-                throw new Exception("Invalid node data");
-            productUrl = String.Format("http://www.pricerunner.se/{0}", productUrl);
-            string imageUrl = titleNode.SelectSingleNode(".//img").GetAttributeValue("src", "No image");
-
-            var priceNode = node.SelectSingleNode("//div[@class='product-wrapper']").SelectSingleNode(".//p[@class='price']");
-            string productId = String.Format("item_{0}" ,node.Id.Replace("prod-",""));
-            return new ProductInfo()
+            if (_categorizedDesign)
             {
-                ImageUrl = HttpUtility.HtmlDecode(imageUrl),
-                Date = "No date",
-                ProductUrl = HttpUtility.HtmlDecode(productUrl),
-                Name = HttpUtility.HtmlDecode(title),
-                Price = HttpUtility.HtmlDecode(priceNode.InnerText).Replace("\t", "").Replace("\n", ""),
-                Id = productId,
-                Location = "No location",
-                Domain = "www.pricerunner.se"
+                var titleNode = node.SelectSingleNode(".//div[@class='productinfobody withretailerlogo']").SelectSingleNode((".//div[@class='productname']"));
+                if (titleNode==null)
+                    throw new Exception("Invalid node data");
+                var title = titleNode.InnerText;
+                var productUrlNode = titleNode.SelectSingleNode(".//h3/a");
+                if (productUrlNode == null)
+                    throw new Exception("Invalid node data");
+                var productUrl = productUrlNode.GetAttributeValue("href", "No url");
+                if (productUrl == "No url")
+                    throw new Exception("Invalid node data");
+                productUrl = String.Format("http://www.pricerunner.se/{0}", productUrl);
+                var productId = node.Id.Replace("prod-", "");
+                var imageNode = node.SelectSingleNode(".//div[@class = 'productimg clearfix jshover_list']").SelectSingleNode(".//a/img");
+                string imageUrl = imageNode == null ? "No image" : imageNode.GetAttributeValue("src", "No image");
+                var priceNode = node.SelectSingleNode(".//div[@class='price']").SelectSingleNode(".//p[@class='price-rang']");
+                return new ProductInfo
+                {
+                    ImageUrl = HttpUtility.HtmlDecode(imageUrl),
+                    Date = "No date",
+                    ProductUrl = HttpUtility.HtmlDecode(productUrl),
+                    Name = HttpUtility.HtmlDecode(title).Trim().Replace("\t", "").Replace("\n", ""),
+                    Price = HttpUtility.HtmlDecode(priceNode.InnerText).Trim().Replace("\t", "").Replace("\n", ""),
+                    Id = productId,
+                    Location = "No location",
+                    Domain = "www.pricerunner.se"
 
-            };
+                };
+            }
+            else
+            {
+                var titleNode = node.SelectSingleNode(".//div[@class='product-wrapper']")
+                    .ChildNodes.First(el => el.GetAttributeValue("class", "no class") == "no class" && el.Name == "p").SelectSingleNode(".//a[@target='_blank']");
+                var title = titleNode.GetAttributeValue("title", "No title");
+                if (title == "No title")
+                    throw new Exception("Invalid node data");
+                var productUrl = titleNode.GetAttributeValue("href", "No url");
+                if (productUrl == "No url")
+                    throw new Exception("Invalid node data");
+                productUrl = String.Format("http://www.pricerunner.se/{0}", productUrl);
+                string imageUrl = titleNode.SelectSingleNode(".//img").GetAttributeValue("src", "No image");
+
+                var priceNode = node.SelectSingleNode("//div[@class='product-wrapper']").SelectSingleNode(".//p[@class='price']");
+                string productId =node.Id.Replace("prod-", "");
+                return new ProductInfo()
+                {
+                    ImageUrl = HttpUtility.HtmlDecode(imageUrl),
+                    Date = "No date",
+                    ProductUrl = HttpUtility.HtmlDecode(productUrl),
+                    Name = HttpUtility.HtmlDecode(title),
+                    Price = HttpUtility.HtmlDecode(priceNode.InnerText).Replace("\t", "").Replace("\n", ""),
+                    Id = productId,
+                    Location = "No location",
+                    Domain = "www.pricerunner.se"
+
+                };    
+            }
+            
         }
 
         protected override string GetNonFirstRequestUrl(int pageNum)
         {
-            return String.Format("{0}@page={1}", _firstResponseUrl, pageNum);
+            return String.Format("{0}@page={1}", FirstResponseUrl, pageNum);
         }
     }
 }

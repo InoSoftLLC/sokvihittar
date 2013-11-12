@@ -5,25 +5,20 @@ using System.Web;
 using HtmlAgilityPack;
 using Sokvihittar.Crawlers.Common;
 
-namespace Sokvihittar.Crawlers
+namespace Sokvihittar.Crawlers.Requests
 {
     public class AllaannonserCrawlerRequest : CrawlerRequest
     {
-        private readonly string _firstRequestUrl;
 
         public AllaannonserCrawlerRequest(string productText, int limit) : base(productText, limit)
         {
-            _firstRequestUrl = String.Format("http://www.allaannonser.se/annonser/?q={0}&sort=last",
-                HttpUtility.UrlEncode(ProductText));
-            FirstResponseHtml =   new HtmlDocument();
-            FirstResponseHtml.LoadHtml(WebRequestHelper.GetResponseHtml(_firstRequestUrl));
         }
 
 
 
         protected override string GetNonFirstRequestUrl(int pageNum)
         {
-            var url = String.Format("{0}&o={1}", _firstRequestUrl, pageNum);
+            var url = String.Format("{0}&o={1}", FirstRequestUrl, pageNum);
             return url;
         }
         protected override ProductInfo GetProductInfoFromNode(HtmlNode node)
@@ -45,8 +40,7 @@ namespace Sokvihittar.Crawlers
                 var productUrl = titleNode.GetAttributeValue("href", "No url");
                 if (productUrl == "No url")
                     throw new Exception("Invalid Product Data");
-                var productId = String.Format("item_{0}", productUrl.Replace("/click.php?id=", ""));
-                productUrl = String.Format("http://www.allaannonser.se{0}", productUrl);
+                var productId =  productUrl.Replace("/click.php?id=", "");
                 var title = titleNode.InnerText;
                 if (title.Length > 54)
                 {
@@ -84,6 +78,20 @@ namespace Sokvihittar.Crawlers
             {
 
                 throw;
+            }
+        }
+
+        public override string SourceName
+        {
+            get { return "Allaannonser"; }
+        }
+
+        protected override string FirstRequestUrl
+        {
+            get
+            {
+                return String.Format("http://www.allaannonser.se/annonser/?q={0}&sort=last",
+                    HttpUtility.UrlEncode(ProductText));
             }
         }
 

@@ -5,14 +5,19 @@ using System.Web;
 using HtmlAgilityPack;
 using Sokvihittar.Crawlers.Common;
 
-namespace Sokvihittar.Crawlers
+namespace Sokvihittar.Crawlers.Requests
 {
     public class MascusCrawlerRequest : CrawlerRequest
     {
         public MascusCrawlerRequest(string productText, int limit) : base(productText, limit)
         {
-            FirstResponseHtml = new HtmlDocument();
-            FirstResponseHtml.LoadHtml(WebRequestHelper.GetResponseHtml(GetNonFirstRequestUrl(1)));
+        }
+
+        public override string SourceName { get { return "Mascus"; } }
+
+        protected override string FirstRequestUrl
+        {
+            get { return GetNonFirstRequestUrl(1); }
         }
 
         protected override void GetProducts(HtmlNode node, ref List<HtmlNode> result)
@@ -47,7 +52,6 @@ namespace Sokvihittar.Crawlers
             var productId = productIdNode.GetAttributeValue("value", "no value");
             if (productId == "No value")
                 throw new Exception("Invalid node data");
-            productId = String.Format("item_{0}", productId);
             var titleNode = node.SelectSingleNode(".//td[@class='column2']").ChildNodes.First();
             var title = titleNode.GetAttributeValue("title", "No title");
             if (title == "No title")

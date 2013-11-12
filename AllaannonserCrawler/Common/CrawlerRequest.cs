@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using HtmlAgilityPack;
 
 namespace Sokvihittar.Crawlers.Common
 {
     public abstract class CrawlerRequest 
     {
+        private HtmlDocument _firstResponseHtml;
+        private string _firstResponseUrl;
+
         protected CrawlerRequest(string productText, int limit)
         {
             ProductText = productText;
@@ -15,14 +17,42 @@ namespace Sokvihittar.Crawlers.Common
         }
 
 
-        public HtmlDocument FirstResponseHtml { get; protected set; }
+        public HtmlDocument FirstResponseHtml
+        {
+            get
+            {
+                if (_firstResponseHtml == null)
+                {
+                    GetFirstResponse();
+                }
+                return _firstResponseHtml;
+            }
+            
+        }
+
+        public string FirstResponseUrl
+        {
+            get
+            {
+                if (_firstResponseUrl == String.Empty)
+                {
+                    GetFirstResponse();
+                }
+                return _firstResponseUrl;
+            }
+        }
 
         public int Limit { get; private set; }
 
         public string ProductText { get; private set; }
 
+        public abstract string SourceName { get; }
+
+        protected abstract string FirstRequestUrl { get; }
+
         public virtual ProductInfo[] ProceedSearchRequest()
         {
+
             var products = new List<ProductInfo>();
             products.AddRange(ProccedResultPage(FirstResponseHtml));
             var i = 2;
@@ -33,7 +63,7 @@ namespace Sokvihittar.Crawlers.Common
                 if (response.ResponseUri.OriginalString == requestUrl)
                 {
                     var newProducts = ProccedResultPage(WebRequestHelper.GetResponseHtml(response)).ToArray();
-                    if (newProducts.Length==0)
+                    if (newProducts.Length == 0)
                     {
                         break;
                     }
@@ -43,10 +73,16 @@ namespace Sokvihittar.Crawlers.Common
                 {
                     break;
                 }
-                i++;             
+                i++;
             }
             return products.Take(Limit).ToArray();
         }
+
+        protected abstract string GetNonFirstRequestUrl(int pageNum);
+
+        protected abstract ProductInfo GetProductInfoFromNode(HtmlNode node);
+
+        protected abstract void GetProducts(HtmlNode node, ref List<HtmlNode> result);
 
         protected IEnumerable<ProductInfo> ProccedResultPage(string html)
         {
@@ -74,11 +110,13 @@ namespace Sokvihittar.Crawlers.Common
             return result;
         }
 
+        private void GetFirstResponse()
+        {
+                _firstResponseHtml  = new HtmlDocument();
+                var firstResponse = WebRequestHelper.GetResponse(FirstRequestUrl);
+                _firstResponseHtml.LoadHtml(WebRequestHelper.GetResponseHtml(firstResponse));
+            _firstResponseUrl = firstResponse.ResponseUri.OriginalString;
 
-        protected abstract void GetProducts(HtmlNode node, ref List<HtmlNode> result);
-
-        protected abstract ProductInfo GetProductInfoFromNode(HtmlNode node);
-
-        protected abstract string GetNonFirstRequestUrl(int pageNum);
+        }
     }
 }
