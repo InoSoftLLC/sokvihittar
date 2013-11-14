@@ -32,7 +32,12 @@ namespace Sokvihittar.Crawlers.Requests
             {
                return base.ProceedSearchRequest();
             }
-            ProccedResultPage(firstProductNodes, result);
+           var doc = new HtmlDocument();
+           GetProducts(doc.DocumentNode, ref firstProductNodes);
+           var products =  ProccedResultPage(firstProductNodes);
+           if (products.Length == 0)
+               return new ProductInfo[0];
+           result.AddRange(products);
             int i = 2;
             while (result.Count < Limit)
             {
@@ -64,17 +69,25 @@ namespace Sokvihittar.Crawlers.Requests
            }
        }
 
-       private void ProccedResultPage(List<HtmlNode> productNodes, List<ProductInfo> result)
+       private ProductInfo[] ProccedResultPage(List<HtmlNode> productNodes)
        {
+           var result = new List<ProductInfo>();
            foreach (var productNode in productNodes)
            {
                var categoryLink = GetCategoryLink(productNode);
                if (categoryLink == "noLink")
                    continue;
-               result.AddRange(GetProductInfos(categoryLink));
-               if (result.Count > Limit)
+               ProductInfo[] products = GetProductInfos(categoryLink);
+               if (products.Length == 0)
+               {
                    break;
-           }        
+               }
+               result.AddRange(products);
+               if (result.Count > Limit )
+                   break;
+               
+           }
+           return result.ToArray();
        }
 
        private ProductInfo[] GetProductInfos(string categoryLink)
@@ -102,7 +115,16 @@ namespace Sokvihittar.Crawlers.Requests
                    if (priceNode==null)
                        continue;
                    var productId = productUrl.Split(';')[2].Replace("oi=", "").Replace("&amp", "");
-                   var date = productNode.ChildNodes.Last(el => el.Name == "td").SelectSingleNode(".//p[@class='date']").InnerText;
+                   string date;
+                   try
+                   {
+                       date = productNode.SelectSingleNode(".//td[@class='about-retailer']").SelectSingleNode(".//div[@class='in-stock-date-more']").SelectSingleNode(".//span[@class='date']").InnerText;
+                   }
+                   catch (Exception)
+                   {
+                       date = "No date";
+                   }
+                   
                    result.Add(new ProductInfo
                    {
                        ImageUrl = HttpUtility.HtmlDecode(imageUrl),
@@ -113,7 +135,7 @@ namespace Sokvihittar.Crawlers.Requests
                        Id = productId,
                        Location = "No location",
                        Domain = "www.pricerunner.se"
-                       });
+                    });
                }
                catch(Exception ex)
                {
@@ -123,22 +145,22 @@ namespace Sokvihittar.Crawlers.Requests
            return result.ToArray();
        }
 
-       private bool CheckIfCategorizied(ref List<HtmlNode> productNodes)
+       private bool CheckIfCategorizied(ref List<HtmlNode> firstProductNodes)
         {
-            
-            GetProducts(FirstResponseHtml.DocumentNode, ref productNodes);
-            var node = productNodes.FirstOrDefault();
+
+            GetProducts(FirstResponseHtml.DocumentNode, ref firstProductNodes);
+            var node = firstProductNodes.FirstOrDefault();
             if (node == null)
             {
                 return false;
             }
-           if (node.GetAttributeValue("class", "no attribute") != "product clearfix") return false;
-           if (node.SelectSingleNode(".//div[@class='productinfobody withretailerlogo']") != null)
-           {
-               _categorizedDesign = true;
-               return false;
-           }
-           return true;
+            if (node.GetAttributeValue("class", "no attribute") != "product clearfix") return false;
+            if (node.SelectSingleNode(".//div[@class='productinfobody withretailerlogo']") != null)
+            {
+                _categorizedDesign = true;
+                return false;
+            }
+            return true;
         }
 
 

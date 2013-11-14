@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using HtmlAgilityPack;
 
@@ -113,9 +114,13 @@ namespace Sokvihittar.Crawlers.Common
         private void GetFirstResponse()
         {
                 _firstResponseHtml  = new HtmlDocument();
+            var a = new Stopwatch();
+            a.Start();
                 var firstResponse = WebRequestHelper.GetResponse(FirstRequestUrl);
+                _firstResponseUrl = firstResponse.ResponseUri.OriginalString;
                 _firstResponseHtml.LoadHtml(WebRequestHelper.GetResponseHtml(firstResponse));
-            _firstResponseUrl = firstResponse.ResponseUri.OriginalString;
+            a.Stop();
+
 
         }
     }
