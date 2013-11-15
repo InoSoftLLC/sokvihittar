@@ -6,7 +6,20 @@ using HtmlAgilityPack;
 
 namespace Sokvihittar.Crawlers.Common
 {
-    public abstract class CrawlerRequest 
+    public interface ICrawlerRequest
+    {
+        string Domain { get; }
+
+        int Limit { get; }
+
+        string ProductText { get; }
+
+        string SourceName { get; }
+
+        ProductInfo[] ProceedSearchRequest();
+    }
+
+    public abstract class CrawlerRequest : ICrawlerRequest 
     {
         private HtmlDocument _firstResponseHtml;
         private string _firstResponseUrl;
@@ -17,6 +30,8 @@ namespace Sokvihittar.Crawlers.Common
             Limit = limit;
         }
 
+
+        public abstract string Domain { get; }
 
         public HtmlDocument FirstResponseHtml
         {
@@ -53,27 +68,27 @@ namespace Sokvihittar.Crawlers.Common
 
         public virtual ProductInfo[] ProceedSearchRequest()
         {
-
             var products = new List<ProductInfo>();
-            products.AddRange(ProccedResultPage(FirstResponseHtml));
+            var prevResult = ProccedResultPage(FirstResponseHtml).ToArray();
+            products.AddRange(prevResult);
             var i = 2;
             while (products.Count < Limit)
             {
                 var requestUrl = GetNonFirstRequestUrl(i);
+                if (requestUrl == null)
+                    break;
                 var response = WebRequestHelper.GetResponse(requestUrl);
-                if (response.ResponseUri.OriginalString == requestUrl)
-                {
-                    var newProducts = ProccedResultPage(WebRequestHelper.GetResponseHtml(response)).ToArray();
-                    if (newProducts.Length == 0)
-                    {
-                        break;
-                    }
-                    products.AddRange(newProducts);
-                }
-                else
+                ProductInfo[] newProducts = ProccedResultPage(WebRequestHelper.GetResponseHtml(response)).ToArray();
+                if (newProducts.Length == 0)
                 {
                     break;
                 }
+                if (newProducts[0].Id == prevResult[0].Id)
+                {
+                    break;
+                }
+                products.AddRange(newProducts);
+                prevResult = newProducts;
                 i++;
             }
             return products.Take(Limit).ToArray();

@@ -1,10 +1,14 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace Sokvihittar.Crawlers.Common
 {
     [DataContract]
     public class CrawlerResult
     {
+        [IgnoreDataMember]
+        public long ExecutionTime { get; set; }
+
         [DataMember(Name = "name")]
         public string Name { get; set; }
 
@@ -16,12 +20,8 @@ namespace Sokvihittar.Crawlers.Common
 
         [DataMember(Name = "products")]
         public ProductInfo[] Products { get; set; }
-    }
 
-    public enum CrawlerRequestState
-    {
-        None = 0,
-        Success = 1,
-        Failure = 2
+        [IgnoreDataMember]
+        public Exception Exception { get; set; }
     }
 }

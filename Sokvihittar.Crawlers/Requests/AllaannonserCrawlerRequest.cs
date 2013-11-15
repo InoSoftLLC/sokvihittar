@@ -16,6 +16,20 @@ namespace Sokvihittar.Crawlers.Requests
 
 
 
+        public override string SourceName
+        {
+            get { return "Allaannonser"; }
+        }
+
+        protected override string FirstRequestUrl
+        {
+            get
+            {
+                return String.Format("http://www.allaannonser.se/annonser/?q={0}&sort=last",
+                    HttpUtility.UrlEncode(ProductText));
+            }
+        }
+
         protected override string GetNonFirstRequestUrl(int pageNum)
         {
             var url = String.Format("{0}&o={1}", FirstRequestUrl, pageNum);
@@ -32,6 +46,8 @@ namespace Sokvihittar.Crawlers.Requests
                         l.Id == String.Format("hitlist_column_{0}_0", id + 1))
                         .SelectSingleNode(".//a/img");
                 string imageUrl = imageNode != null ? imageNode.GetAttributeValue("src", "No image") : "No image";
+                if (imageUrl != "No image")
+                    imageUrl = imageUrl.Split('&')[0];
                 var titleNode = node.SelectSingleNode(String.Format(".//td[@id='hitlist_column_{0}_1']", id))
                     .SelectSingleNode((".//span[@class='link_row']"))
                     .SelectNodes(".//a")
@@ -40,7 +56,8 @@ namespace Sokvihittar.Crawlers.Requests
                 var productUrl = titleNode.GetAttributeValue("href", "No url");
                 if (productUrl == "No url")
                     throw new Exception("Invalid Product Data");
-                var productId =  productUrl.Replace("/click.php?id=", "");
+                productUrl = String.Format("http://www.allaannonser.se{0}", productUrl);
+                var productId = productUrl.Replace("http://www.allaannonser.se/click.php?id=", "");
                 var title = titleNode.InnerText;
                 if (title.Length > 54)
                 {
@@ -69,8 +86,7 @@ namespace Sokvihittar.Crawlers.Requests
                     Price = HttpUtility.HtmlDecode(priceNode.InnerText).Replace("\t", "").Replace("\n", ""),
                     Id = productId,
                     Location = HttpUtility.HtmlDecode(location),
-                    Domain = "www.allaannonser.se"
-
+                    Domain = Domain
                 };
 
             }
@@ -81,18 +97,9 @@ namespace Sokvihittar.Crawlers.Requests
             }
         }
 
-        public override string SourceName
+        public override string Domain
         {
-            get { return "Allaannonser"; }
-        }
-
-        protected override string FirstRequestUrl
-        {
-            get
-            {
-                return String.Format("http://www.allaannonser.se/annonser/?q={0}&sort=last",
-                    HttpUtility.UrlEncode(ProductText));
-            }
+            get { return "www.allaannonser.se"; }
         }
 
         protected override void GetProducts(HtmlNode node, ref List<HtmlNode> result)

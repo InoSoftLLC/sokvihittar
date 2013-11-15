@@ -1,7 +1,6 @@
 ﻿using System.Web.Http;
 using Sokvihittar.Crawlers;
 using Sokvihittar.Crawlers.Common;
-using Sokvihittar.Crawlers.Requests;
 
 namespace Sokvihittar.Controllers
 {
@@ -19,8 +18,7 @@ namespace Sokvihittar.Controllers
         [HttpGet]
         public CrawlerResult[] Search(string text, int limit)
         {
-            var crawler = new Crawler();
-            return crawler.Search(text, limit);
+            return Crawler.Search(text, limit);
         }
     }
 }

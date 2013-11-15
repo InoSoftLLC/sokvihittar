@@ -76,9 +76,14 @@ namespace Sokvihittar.Crawlers.Requests
                 Price = HttpUtility.HtmlDecode(priceNode.InnerText).Replace("\t","").Replace("\n",""),
                 Id = productId,
                 Location = HttpUtility.HtmlDecode(location.InnerText),
-                Domain = "www.mascus.se"
+                Domain = Domain
 
             };
+        }
+
+        public override string Domain
+        {
+            get { return "www.mascus.se"; }
         }
 
         protected override string GetNonFirstRequestUrl(int pageNum)

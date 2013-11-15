@@ -111,6 +111,10 @@ namespace Sokvihittar.Crawlers.Requests
                    var productUrl = retailerNode.GetAttributeValue("href", "No link");
                    if (productUrl == "No link")
                        continue;
+                   if (productUrl.StartsWith("/"))
+                   {
+                       productUrl = String.Format("http://www.pricerunner.se{0}", productUrl);
+                   }
                    var priceNode = productNode.SelectSingleNode(".//td[@class='price']").SelectNodes(".//div").FirstOrDefault();
                    if (priceNode==null)
                        continue;
@@ -191,7 +195,10 @@ namespace Sokvihittar.Crawlers.Requests
                 var productUrl = productUrlNode.GetAttributeValue("href", "No url");
                 if (productUrl == "No url")
                     throw new Exception("Invalid node data");
-                productUrl = String.Format("http://www.pricerunner.se/{0}", productUrl);
+                if (productUrl.StartsWith("/"))
+                {
+                    productUrl = String.Format("http://www.pricerunner.se{0}", productUrl);
+                }
                 var productId = node.Id.Replace("prod-", "");
                 var imageNode = node.SelectSingleNode(".//div[@class = 'productimg clearfix jshover_list']").SelectSingleNode(".//a/img");
                 string imageUrl = imageNode == null ? "No image" : imageNode.GetAttributeValue("src", "No image");
@@ -219,7 +226,10 @@ namespace Sokvihittar.Crawlers.Requests
                 var productUrl = titleNode.GetAttributeValue("href", "No url");
                 if (productUrl == "No url")
                     throw new Exception("Invalid node data");
-                productUrl = String.Format("http://www.pricerunner.se/{0}", productUrl);
+                if (productUrl.StartsWith("/"))
+                {
+                    productUrl = String.Format("http://www.pricerunner.se{0}", productUrl);
+                }
                 string imageUrl = titleNode.SelectSingleNode(".//img").GetAttributeValue("src", "No image");
 
                 var priceNode = node.SelectSingleNode("//div[@class='product-wrapper']").SelectSingleNode(".//p[@class='price']");
@@ -233,14 +243,18 @@ namespace Sokvihittar.Crawlers.Requests
                     Price = HttpUtility.HtmlDecode(priceNode.InnerText).Replace("\t", "").Replace("\n", ""),
                     Id = productId,
                     Location = "No location",
-                    Domain = "www.pricerunner.se"
-
+                    Domain = Domain
                 };    
             }
             
         }
 
-        protected override string GetNonFirstRequestUrl(int pageNum)
+       public override string Domain
+       {
+           get { return "www.pricerunner.se"; }
+       }
+
+       protected override string GetNonFirstRequestUrl(int pageNum)
         {
             return String.Format("{0}@page={1}", FirstResponseUrl, pageNum);
         }

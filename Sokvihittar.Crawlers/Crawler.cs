@@ -1,33 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Sokvihittar.Crawlers.Common;
 using Sokvihittar.Crawlers.Requests;
 
 namespace Sokvihittar.Crawlers
 {
-    public class Crawler
+    public static class Crawler
     {
-        private List<Func<string, int, CrawlerRequest>> _crawlers;
 
-        public Crawler()
+        public static CrawlerResult[] Search(string text, int limit)
         {
-            _crawlers= new List<Func<string, int, CrawlerRequest>>
+            var crawlers = new List<Func<string, int, ICrawlerRequest>>
             {
                 (t, l) => new AllaannonserCrawlerRequest(t, l),
                 (t, l) => new MascusCrawlerRequest(t, l),
                 (t, l) => new PriceRunnerCrawlerRequest(t, l),
-
             };
-        }
-
-        public CrawlerResult[] Search(string text, int limit)
-        {
+ 
             var result = new List<CrawlerResult>();
-            Parallel.ForEach(_crawlers, crawler =>
+            Parallel.ForEach(crawlers, crawler =>
             {
+                var watch = new Stopwatch();
+                watch.Start();
                 var crawlerRequest = crawler(text, limit);
                 CrawlerResult res = null;
                 try
@@ -41,20 +37,23 @@ namespace Sokvihittar.Crawlers
                         State = CrawlerRequestState.Success
                     };
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     res = new CrawlerResult
                     {
                         Count = 0,
                         Name = crawlerRequest.SourceName,
                         Products = new ProductInfo[0],
-                        State = CrawlerRequestState.Failure
+                        State = CrawlerRequestState.Failure,
+                        Exception = ex 
                     };
                 }
                 finally
                 {
                     lock (result)
                     {
+                        watch.Stop();
+                        res.ExecutionTime = watch.ElapsedMilliseconds;
                         result.Add(res);
                     }
                 }
