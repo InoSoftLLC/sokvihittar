@@ -49,7 +49,6 @@ namespace Sokvihittar.Console.Test
                     j++;
                 }
                 System.Console.WriteLine("success");
-                System.Console.ReadKey();
             }
            
         }

@@ -16,7 +16,7 @@ namespace Sokvihittar.Controllers
         /// <param name="limit">Product limit count.</param>
         /// <returns>Returns an array of crawler results.</returns>
         [HttpGet]
-        public CrawlerResult[] Search(string text, int limit)
+        public CrawlerResult[] Index(string text, int limit)
         {
             return Crawler.Search(text, limit);
         }

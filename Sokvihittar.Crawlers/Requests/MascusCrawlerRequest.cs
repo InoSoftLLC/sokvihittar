@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using HtmlAgilityPack;
 using Sokvihittar.Crawlers.Common;
@@ -14,6 +15,11 @@ namespace Sokvihittar.Crawlers.Requests
         }
 
         public override string SourceName { get { return "Mascus"; } }
+
+        public override Encoding Encoding
+        {
+            get { return Encoding.UTF8; }
+        }
 
         protected override string FirstRequestUrl
         {

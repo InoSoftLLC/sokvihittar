@@ -7,20 +7,20 @@ namespace Sokvihittar.Crawlers.Common
 {
     public static class WebRequestHelper
     {
-        public static string GetResponseHtml(string url)
+        public static string GetResponseHtml(string url, Encoding encoding)
         {
             HttpWebResponse response = GetResponse(url);
-            return GetResponseHtml(response);
+            return GetResponseHtml(response, encoding);
         }
 
-        public static string GetResponseHtml(HttpWebResponse response)
+        public static string GetResponseHtml(HttpWebResponse response, Encoding encoding)
         {
-            string result = String.Empty;
+            string result;
             Stream resStream = response.GetResponseStream();
             using (var buffer = new BufferedStream(resStream))
             {
-                using (var reader = new StreamReader(buffer))
-                {
+                using (var reader = new StreamReader(buffer, encoding))
+                { 
                      result = reader.ReadToEnd();
                 }
             }

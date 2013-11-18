@@ -21,6 +21,11 @@ namespace Sokvihittar.Crawlers.Requests
             get { return "fyndiq.se"; }
         }
 
+        public override Encoding Encoding
+        {
+            get { return Encoding.UTF8; }
+        }
+
         public override string SourceName
         {
             get { return "Fyndiq"; }

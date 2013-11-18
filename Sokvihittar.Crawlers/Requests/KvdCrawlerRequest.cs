@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using HtmlAgilityPack;
 using Sokvihittar.Crawlers.Common;
+using Sokvihittar.Crawlers.Enums;
 
 namespace Sokvihittar.Crawlers.Requests
 {
@@ -16,6 +18,11 @@ namespace Sokvihittar.Crawlers.Requests
         public override string SourceName
         {
             get { return "Kvd"; }
+        }
+
+        public override Encoding Encoding
+        {
+            get { return System.Text.Encoding.GetEncoding(EncodingHelper.CodePages["iso-8859-1"]); }
         }
 
         protected override string FirstRequestUrl

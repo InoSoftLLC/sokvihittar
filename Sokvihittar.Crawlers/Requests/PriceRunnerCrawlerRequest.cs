@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using HtmlAgilityPack;
 using Sokvihittar.Crawlers.Common;
@@ -23,6 +24,11 @@ namespace Sokvihittar.Crawlers.Requests
                .SelectSingleNode(".//h3/a").GetAttributeValue("href", "noLink"));
        }
 
+       public override Encoding Encoding
+       {
+           get { return Encoding.UTF8; }
+       }
+
        public override ProductInfo[] ProceedSearchRequest()
         {
             var firstProductNodes = new List<HtmlNode>();
@@ -43,7 +49,7 @@ namespace Sokvihittar.Crawlers.Requests
             {
                 var requestUrl = GetNonFirstRequestUrl(i);
                 var response = WebRequestHelper.GetResponse(requestUrl);
-                var newProducts = ProccedResultPage(WebRequestHelper.GetResponseHtml(response)).ToArray();
+                var newProducts = ProccedResultPage(WebRequestHelper.GetResponseHtml(response, Encoding)).ToArray();
                 if (newProducts.Length == 0)
                 {
                     break;
@@ -93,7 +99,7 @@ namespace Sokvihittar.Crawlers.Requests
        private ProductInfo[] GetProductInfos(string categoryLink)
        {
            var htmlDoc = new HtmlDocument();
-           htmlDoc.LoadHtml(WebRequestHelper.GetResponseHtml(categoryLink));
+           htmlDoc.LoadHtml(WebRequestHelper.GetResponseHtml(categoryLink, Encoding));
            var imageNode =
                htmlDoc.DocumentNode.SelectSingleNode(".//head").SelectSingleNode(".//meta[@property='og:image']");
            var imageUrl = imageNode == null ? "No image" : imageNode.GetAttributeValue("content", "No image");

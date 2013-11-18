@@ -14,9 +14,11 @@ namespace Sokvihittar.Crawlers
         {
             var crawlers = new List<Func<string, int, ICrawlerRequest>>
             {
+                //Add crawlers here.
                 (t, l) => new AllaannonserCrawlerRequest(t, l),
                 (t, l) => new MascusCrawlerRequest(t, l),
                 (t, l) => new PriceRunnerCrawlerRequest(t, l),
+                //(t, l) => new BlocketCrawlerRequest(t, l),
             };
  
             var result = new List<CrawlerResult>();

@@ -53,10 +53,12 @@
     <Compile Include="Common\CrawlerRequestState.cs" />
     <Compile Include="Common\CrawlerResult.cs" />
     <Compile Include="Crawler.cs" />
+    <Compile Include="EncodingHelper.cs" />
     <Compile Include="PrisjaktResponse.cs" />
     <Compile Include="Requests\AllaannonserCrawlerRequest.cs" />
     <Compile Include="Common\CrawlerRequest.cs" />
     <Compile Include="Common\ProductInfo.cs" />
+    <Compile Include="Requests\BlocketCrawlerRequest.cs" />
     <Compile Include="Requests\FyndiqCrawlerRequest.cs" />
     <Compile Include="Requests\GulansCrawlerRequest.cs" />
     <Compile Include="Requests\KvdCrawlerRequest.cs" />
@@ -65,10 +67,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\WebRequestHelper.cs" />
     <Compile Include="Requests\PrisjaktCrawlerRequest.cs" />
+    <Compile Include="Requests\TraderaCrawlerRequest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

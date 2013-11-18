@@ -43,6 +43,11 @@ namespace Sokvihittar.Crawlers.Requests
             get { return "Gulans"; }
         }
 
+        public override Encoding Encoding
+        {
+            get { return Encoding.UTF8; }
+        }
+
         protected override string FirstRequestUrl
         {
             get

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using HtmlAgilityPack;
 
 namespace Sokvihittar.Crawlers.Common
@@ -16,12 +17,15 @@ namespace Sokvihittar.Crawlers.Common
 
         string SourceName { get; }
 
+        Encoding Encoding { get; }
+
         ProductInfo[] ProceedSearchRequest();
     }
 
     public abstract class CrawlerRequest : ICrawlerRequest 
     {
         private HtmlDocument _firstResponseHtml;
+
         private string _firstResponseUrl;
 
         protected CrawlerRequest(string productText, int limit)
@@ -32,6 +36,8 @@ namespace Sokvihittar.Crawlers.Common
 
 
         public abstract string Domain { get; }
+
+        public abstract Encoding Encoding { get; }
 
         public HtmlDocument FirstResponseHtml
         {
@@ -78,7 +84,7 @@ namespace Sokvihittar.Crawlers.Common
                 if (requestUrl == null)
                     break;
                 var response = WebRequestHelper.GetResponse(requestUrl);
-                ProductInfo[] newProducts = ProccedResultPage(WebRequestHelper.GetResponseHtml(response)).ToArray();
+                ProductInfo[] newProducts = ProccedResultPage(WebRequestHelper.GetResponseHtml(response, Encoding)).ToArray();
                 if (newProducts.Length == 0)
                 {
                     break;
@@ -133,7 +139,7 @@ namespace Sokvihittar.Crawlers.Common
             a.Start();
                 var firstResponse = WebRequestHelper.GetResponse(FirstRequestUrl);
                 _firstResponseUrl = firstResponse.ResponseUri.OriginalString;
-                _firstResponseHtml.LoadHtml(WebRequestHelper.GetResponseHtml(firstResponse));
+                _firstResponseHtml.LoadHtml(WebRequestHelper.GetResponseHtml(firstResponse, Encoding));
             a.Stop();
 
 
