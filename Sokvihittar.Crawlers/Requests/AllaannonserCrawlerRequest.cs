@@ -89,7 +89,7 @@ namespace Sokvihittar.Crawlers.Requests
                     Date = date,
                     ProductUrl = HttpUtility.HtmlDecode(productUrl),
                     Name = HttpUtility.HtmlDecode(title),
-                    Price = HttpUtility.HtmlDecode(priceNode.InnerText).Replace("\t", "").Replace("\n", ""),
+                    Price = HttpUtility.HtmlDecode(priceNode.InnerText).Trim().Replace("\t", "").Replace("\n", "").Replace("\t", "").Replace("\n", ""),
                     Id = productId,
                     Location = HttpUtility.HtmlDecode(location),
                     Domain = Domain

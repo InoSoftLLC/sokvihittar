@@ -77,7 +77,16 @@ namespace Sokvihittar.Crawlers.Requests
             var  priceNode = productNode.SelectSingleNode(".//div[@class='price']");
             if(productUrl == null)
                 throw new Exception("Invalid node data");
-            var price = priceNode.FirstChild.ChildNodes.First(el => el.Name == "#text").InnerText;
+            string price;
+            if (priceNode.FirstChild.Name == "#text")
+            {
+                var tempNode = priceNode.SelectSingleNode(".//div[@class='auctionWithBIN']");
+                price = tempNode != null ? tempNode.ChildNodes.First(el => el.Name == "#text").InnerText : priceNode.InnerText;
+            }
+            else
+            {
+                price = priceNode.FirstChild.ChildNodes.First(el => el.Name == "#text").InnerText;
+            }
             var productIdNode = infoNode.SelectSingleNode(".//div[@class='memoryListAdder']");
             if (productIdNode == null)
                 throw new Exception("Invalid node data");

@@ -8,7 +8,7 @@ using System.Text;
 using System.Web;
 using Sokvihittar.Crawlers.Common;
 
-namespace Sokvihittar.Crawlers.Requests
+namespace Sokvihittar.Crawlers.Requests.Unused
 {
     class PrisjaktCrawlerRequest : ICrawlerRequest
     {

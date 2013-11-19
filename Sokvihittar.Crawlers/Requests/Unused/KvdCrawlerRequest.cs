@@ -7,7 +7,7 @@ using HtmlAgilityPack;
 using Sokvihittar.Crawlers.Common;
 using Sokvihittar.Crawlers.Enums;
 
-namespace Sokvihittar.Crawlers.Requests
+namespace Sokvihittar.Crawlers.Requests.Unused
 {
     public class KvdCrawlerRequest : CrawlerRequest
     {

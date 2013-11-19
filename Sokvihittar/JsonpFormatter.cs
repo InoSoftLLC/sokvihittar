@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
@@ -69,14 +70,18 @@ namespace Sokvihittar
             HttpContent content,
             TransportContext transportContext)
         {
+           
             if (string.IsNullOrEmpty(JsonpCallbackFunction))
+            {
+                
                 return base.WriteToStreamAsync(type, value, stream, content, transportContext);
-
+            }
             StreamWriter writer = null;
-
+            content.Headers.ContentType = new MediaTypeHeaderValue("text/javascript");
             // write the pre-amble
             try
             {
+
                 writer = new StreamWriter(stream);
                 writer.Write(JsonpCallbackFunction + "(");
                 writer.Flush();
@@ -94,7 +99,7 @@ namespace Sokvihittar
                 tcs.SetException(ex);
                 return tcs.Task;
             }
-
+            
             return base.WriteToStreamAsync(type, value, stream, content, transportContext)
                 .ContinueWith(innerTask =>
                 {
@@ -118,14 +123,18 @@ namespace Sokvihittar
         {
             if (request.Method != HttpMethod.Get)
                 return null;
-
-            //var query = HttpUtility.ParseQueryString(request.RequestUri.Query);
-            //var queryVal = query[this.JsonpParameterName];
-
-            //if (string.IsNullOrEmpty(queryVal))
-            //    return null;
-
-            return "&&";
+            
+            try
+            {
+                var url = request.RequestUri.Query;
+                var lastParam = url.Split('&').Single(el => el.ToLower().Contains("callback="));
+                    lastParam = lastParam.Replace("callback=", "").Replace("?", "");
+                    return String.Format("{0} && {0}",lastParam);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }

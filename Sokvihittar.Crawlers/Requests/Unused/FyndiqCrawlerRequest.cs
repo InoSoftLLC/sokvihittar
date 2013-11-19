@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using HtmlAgilityPack;
 using Sokvihittar.Crawlers.Common;
 
-namespace Sokvihittar.Crawlers.Requests
+namespace Sokvihittar.Crawlers.Requests.Unused
 {
     public class FyndiqCrawlerRequest : CrawlerRequest
     {

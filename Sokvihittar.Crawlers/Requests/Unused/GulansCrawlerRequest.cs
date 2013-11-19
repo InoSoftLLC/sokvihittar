@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using HtmlAgilityPack;
 using Sokvihittar.Crawlers.Common;
 
-namespace Sokvihittar.Crawlers.Requests
+namespace Sokvihittar.Crawlers.Requests.Unused
 {
     public class GulansCrawlerRequest : CrawlerRequest
     {

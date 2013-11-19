@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using HtmlAgilityPack;
 using Sokvihittar.Crawlers.Common;
@@ -51,8 +50,8 @@ namespace Sokvihittar.Crawlers.Requests
             string imageUrl;
             try
             {
-                var imageNode = node.SelectSingleNode(".//div[@class='image_container']")
-                    .ChildNodes.Single(el => el.Name == "div")
+                var imageNode = node.ChildNodes.First(el => el.GetAttributeValue("class", "No class").Contains("image_container"))
+                    .ChildNodes.First(el => el.Name == "div" && el.GetAttributeValue("class", "No class").Contains("image_content"))
                     .ChildNodes.Single(el => el.Name == "div")
                     .ChildNodes.Single(el => el.Name == "a")
                     .ChildNodes.Single(el => el.Name == "img");
@@ -92,27 +91,36 @@ namespace Sokvihittar.Crawlers.Requests
             {
                 throw new Exception("Invalid Product Data");
             }
+            var price = HttpUtility.HtmlDecode(priceNode.InnerText).Trim().Replace("\t", "").Replace("\n", "");
+            if (price == String.Empty)
+            {
+                price = "No price";
+            }
             string location;
             try
             {
                 var locationNode =
-                    productNode.SelectSingleNode("//div[@class='cat_geo clean_links float_left']")
+                    productNode.SelectSingleNode(".//div[@class='cat_geo clean_links float_left']")
                         .SelectSingleNode(".//span[@class='list_area']");
                 location = HttpUtility.HtmlDecode(locationNode.InnerText);
                 location = location.Substring(location.IndexOf(",") + 1).Trim().Replace("\t", "").Replace("\n", "");
+                if (location == String.Empty)
+                {
+                    location = "No location";
+                }
             }
             catch (Exception)
             {
                 location = "No location";
             }
             var productId = node.Id.Replace("item_", "");
-            return new ProductInfo()
+            return new ProductInfo
             {
                 ImageUrl = HttpUtility.HtmlDecode(imageUrl),
                 Date = HttpUtility.HtmlDecode(dateNode.InnerText).Trim().Replace("\t", "").Replace("\n", ""),
                 ProductUrl = HttpUtility.HtmlDecode(productUrl),
                 Name = HttpUtility.HtmlDecode(title),
-                Price = HttpUtility.HtmlDecode(priceNode.InnerText).Trim().Replace("\t", "").Replace("\n", ""),
+                Price = price,
                 Id = productId,
                 Location = location,
                 Domain = Domain

@@ -18,7 +18,8 @@ namespace Sokvihittar.Crawlers
                 (t, l) => new AllaannonserCrawlerRequest(t, l),
                 (t, l) => new MascusCrawlerRequest(t, l),
                 (t, l) => new PriceRunnerCrawlerRequest(t, l),
-                //(t, l) => new BlocketCrawlerRequest(t, l),
+                (t, l) => new BlocketCrawlerRequest(t, l),
+                (t, l) => new TraderaCrawlerRequest(t, l),
             };
  
             var result = new List<CrawlerResult>();
