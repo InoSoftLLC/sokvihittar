@@ -12,5 +12,9 @@ namespace Sokvihittar.Controllers
         {
             return View();
         }
+        public ActionResult Test()
+        {
+            return View();
+        }
     }
 }

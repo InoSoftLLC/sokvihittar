@@ -1,0 +1,76 @@
+﻿@model Sokvihittar.Crawlers.Common.CrawlerResult[]
+@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<div class="search-container">
+
+
+    @using (Html.BeginForm("Test", "Home", FormMethod.Post))
+    {
+        <div class="search-box">
+            <input id="searchText" name="searchText" type="text" placeholder="Type key words..." value="@ViewBag.SearchText" />
+            <button>SEARCH</button>
+            <div class="right">
+                <span>max number of results per crawler</span>
+                <input id="limit" name="limit" type="text" value="@(ViewBag.Limit ?? 10)" />
+            </div>
+        </div>
+    }
+    
+    <div class="search-results">
+        <div class="tabs">
+            <ul>
+                @foreach (var crawler in Model)
+                {
+                    <li><a class="item"><span class="name">@crawler.Name</span> <span>(@crawler.Count)</span></a></li>
+                }
+
+                
+                @*<li><a>Allaannonser</a></li>
+                <li><a>Pricerunner</a></li>
+                <li><a>ALL</a></li>*@
+            </ul>
+        </div>
+        <div>
+            @foreach (var crawler in Model)
+            {
+                <div id="@crawler.Name" class="result-list">
+                    <span class="execution-time">Execution time(secs): @(crawler.ExecutionTime/1000)</span>
+                    
+                    @foreach (var item in crawler.Products)
+                    {
+                        <div class="result">
+                            <div class="img left">
+                                <a href="@item.ProductUrl">
+                                    <img src="@item.ImageUrl" width="140px" height="100px" />
+                                </a>
+                            </div>
+                            <div class="info left">
+                                <h4><a href="@item.ProductUrl">@item.Name</a></h4>
+                                <div>
+                                    <div>
+                                        <span class="label">Price:</span>
+                                        <span>@item.Price</span>
+                                    </div>
+                                    @*<div>
+                                        <span class="label">ID:</span>
+                                        <span>@item.Id</span>
+                                    </div>*@
+                                    <div>
+                                        <span class="label">Location:</span>
+                                        <span>@item.Location</span>
+                                    </div>
+                                    <div>
+                                        <span class="label">Date:</span>
+                                        <span>@item.Date</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
