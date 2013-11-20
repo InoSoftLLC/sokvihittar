@@ -37,6 +37,13 @@ namespace Sokvihittar.Controllers
             return response;
         }
 
+        [HttpGet]
+        public CrawlerResult[] Index(string text, int limit)
+        {
+            return Crawler.Search(text, limit);
+        }
+
+
         private string Serialize(CrawlerResult[] crawlerResults)
         {
             var serializer = new DataContractJsonSerializer(crawlerResults.GetType());
