@@ -20,6 +20,11 @@ namespace Sokvihittar.Crawlers
                 (t, l) => new PriceRunnerCrawlerRequest(t, l),
                 (t, l) => new BlocketCrawlerRequest(t, l),
                 (t, l) => new TraderaCrawlerRequest(t, l),
+                (t, l) => new BarnebysCrawlerRequest(t, l),
+                (t, l) => new AnnonsborsenCrawlerRequest(t, l),
+                (t, l) => new LokusCrawlerRequest(t, l),
+                
+                
             };
  
             var result = new List<CrawlerResult>();

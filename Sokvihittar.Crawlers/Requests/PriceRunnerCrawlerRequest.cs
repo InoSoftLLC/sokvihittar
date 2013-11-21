@@ -70,7 +70,7 @@ namespace Sokvihittar.Crawlers.Requests
            get
            {
                return String.Format(
-                   "http://www.pricerunner.se/search?q={0}&numberOfProducts=60",
+                   "http://www.pricerunner.se/search?q={0}",
                    HttpUtility.UrlEncode(ProductText));
            }
        }
@@ -158,7 +158,7 @@ namespace Sokvihittar.Crawlers.Requests
        private bool CheckIfCategorizied(ref List<HtmlNode> firstProductNodes)
         {
 
-            GetProducts(FirstResponseHtml.DocumentNode, ref firstProductNodes);
+            GetProducts(FirstResponseHtmlDocument.DocumentNode, ref firstProductNodes);
             var node = firstProductNodes.FirstOrDefault();
             if (node == null)
             {
@@ -262,7 +262,7 @@ namespace Sokvihittar.Crawlers.Requests
 
        protected override string GetNonFirstRequestUrl(int pageNum)
         {
-            return String.Format("{0}@page={1}", FirstResponseUrl, pageNum);
+            return String.Format("{0}&page={1}", FirstResponseUrl, pageNum);
         }
     }
 }

@@ -39,7 +39,7 @@ namespace Sokvihittar.Crawlers.Common
 
         public abstract Encoding Encoding { get; }
 
-        public HtmlDocument FirstResponseHtml
+        public HtmlDocument FirstResponseHtmlDocument
         {
             get
             {
@@ -75,7 +75,7 @@ namespace Sokvihittar.Crawlers.Common
         public virtual ProductInfo[] ProceedSearchRequest()
         {
             var products = new List<ProductInfo>();
-            var prevResult = ProccedResultPage(FirstResponseHtml).ToArray();
+            var prevResult = ProccedResultPage(FirstResponseHtmlDocument).ToArray();
             products.AddRange(prevResult);
             var i = 2;
             while (products.Count < Limit)
@@ -89,7 +89,7 @@ namespace Sokvihittar.Crawlers.Common
                 {
                     break;
                 }
-                if (newProducts[0].Id == prevResult[0].Id)
+                if (newProducts[0].Id == prevResult[0].Id && newProducts[0].Id != "No id")
                 {
                     break;
                 }
@@ -126,6 +126,7 @@ namespace Sokvihittar.Crawlers.Common
                 }
                 catch (Exception)
                 {
+                    var a= SourceName;
                     continue;
                 }
             }
@@ -135,12 +136,10 @@ namespace Sokvihittar.Crawlers.Common
         private void GetFirstResponse()
         {
                 _firstResponseHtml  = new HtmlDocument();
-            var a = new Stopwatch();
-            a.Start();
                 var firstResponse = WebRequestHelper.GetResponse(FirstRequestUrl);
                 _firstResponseUrl = firstResponse.ResponseUri.OriginalString;
                 _firstResponseHtml.LoadHtml(WebRequestHelper.GetResponseHtml(firstResponse, Encoding));
-            a.Stop();
+
 
 
         }

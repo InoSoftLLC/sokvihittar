@@ -59,7 +59,10 @@
     <Compile Include="Requests\AllaannonserCrawlerRequest.cs" />
     <Compile Include="Common\CrawlerRequest.cs" />
     <Compile Include="Common\ProductInfo.cs" />
+    <Compile Include="Requests\BarnebysCrawlerRequest.cs" />
+    <Compile Include="Requests\AnnonsborsenCrawlerRequest.cs" />
     <Compile Include="Requests\BlocketCrawlerRequest.cs" />
+    <Compile Include="Requests\LokusCrawlerRequest.cs" />
     <Compile Include="Requests\Unused\FyndiqCrawlerRequest.cs" />
     <Compile Include="Requests\Unused\GulansCrawlerRequest.cs" />
     <Compile Include="Requests\Unused\KvdCrawlerRequest.cs" />
