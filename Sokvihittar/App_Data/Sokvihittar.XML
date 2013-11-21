@@ -4,6 +4,34 @@
         <name>Sokvihittar</name>
     </assembly>
     <members>
+        <member name="F:Sokvihittar.JsonpFormatter.JsonpCallbackFunction">
+            <summary>
+            Captured name of the Jsonp function that the JSON call
+            is wrapped in. Set in GetPerRequestFormatter Instance
+            </summary>
+        </member>
+        <member name="M:Sokvihittar.JsonpFormatter.GetPerRequestFormatterInstance(System.Type,System.Net.Http.HttpRequestMessage,System.Net.Http.Headers.MediaTypeHeaderValue)">
+            <summary>
+            Override this method to capture the Request object
+            </summary>
+            <param name="type"></param>
+            <param name="request"></param>
+            <param name="mediaType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sokvihittar.JsonpFormatter.GetJsonCallbackFunction(System.Net.Http.HttpRequestMessage)">
+            <summary>
+            Retrieves the Jsonp Callback function
+            from the query string
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Sokvihittar.JsonpFormatter.JsonpParameterName">
+            <summary>
+             Name of the query string parameter to look for
+             the jsonp function name
+            </summary>
+        </member>
         <member name="M:Sokvihittar.Areas.HelpPage.ApiDescriptionExtensions.GetFriendlyId(System.Web.Http.Description.ApiDescription)">
             <summary>
             Generates an URI-friendly ID for the <see cref="T:System.Web.Http.Description.ApiDescription"/>. E.g. "Get-Values-id_name" instead of "GetValues/{id}?name={name}"
@@ -401,21 +429,13 @@
             Search API
             </summary>
         </member>
-        <member name="M:Sokvihittar.Controllers.SearchController.Allaannonser(System.String,System.Int32)">
+        <member name="M:Sokvihittar.Controllers.SearchController.Index(System.String,System.Int32,System.String)">
             <summary>
-            Searches for items on http://www.allaannonser.se
+            Searches for items.
             </summary>
-            <param name="text"></param>
-            <param name="limit"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Sokvihittar.Controllers.SearchController.Pricerunner(System.String,System.Int32)">
-            <summary>
-            Searches for items on http://www.pricerunner.se
-            </summary>
-            <param name="text"></param>
-            <param name="limit"></param>
-            <returns></returns>
+            <param name="text">Search text.</param>
+            <param name="limit">Product limit count.</param>
+            <returns>Returns an array of crawler crawlerResults.</returns>
         </member>
     </members>
 </doc>
