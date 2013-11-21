@@ -24,7 +24,6 @@ namespace Sokvihittar
             // For more information, refer to: http://www.asp.net/web-api
             config.EnableSystemDiagnosticsTracing();
 
-            config.Formatters.Insert(0, new JsonpFormatter());
         }
     }
 }

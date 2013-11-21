@@ -56,6 +56,10 @@ namespace Sokvihittar.Crawlers.Requests
                     .ChildNodes.Single(el => el.Name == "a")
                     .ChildNodes.Single(el => el.Name == "img");
                 imageUrl = imageNode.GetAttributeValue("src", "No image");
+                if (imageUrl == "/img/transparent.gif")
+                {
+                    imageUrl = imageNode.GetAttributeValue("longdesc", "No image");
+                }
             }
             catch (Exception)
             {
