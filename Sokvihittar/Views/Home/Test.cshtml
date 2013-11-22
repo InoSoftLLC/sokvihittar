@@ -11,9 +11,9 @@
         <div class="search-box">
             <input id="searchText" name="searchText" type="text" placeholder="Type key words..." value="@ViewBag.SearchText" />
             <button>SEARCH</button>
-            <div class="right">
-                <span>max number of results per crawler</span>
+            <div>
                 <input id="limit" name="limit" type="text" value="@(ViewBag.Limit ?? 10)" />
+                <span>max number of results per crawler</span>
             </div>
         </div>
     }
@@ -25,7 +25,6 @@
                 {
                     <li><a class="item"><span class="name">@crawler.Name</span> <span>(@crawler.Count)</span></a></li>
                 }
-
                 
                 @*<li><a>Allaannonser</a></li>
                 <li><a>Pricerunner</a></li>
@@ -51,7 +50,7 @@
                                 <div>
                                     <div>
                                         <span class="label">Price:</span>
-                                        <span>@item.Price</span>
+                                        <span class="bold">@item.Price</span>
                                     </div>
                                     @*<div>
                                         <span class="label">ID:</span>

@@ -9,20 +9,16 @@
 </head>
 <body>
     <header>
-        <div class="content-wrapper">
-            <div class="float-left">
-                <p class="site-title">
-                    <a href="~/">Sokvihittar Web API powered by InoSoft</a></p>
-            </div>
-            <div class="float-right">
-                <nav>
-                    <ul id="menu">
-                        <li>@Html.ActionLink("Test", "Test", "Home", new { area = "" }, null)</li>
-                        <li>@Html.ActionLink("API", "Index", "Help", new { area = "" }, null)</li>
-                    </ul>
-                </nav>
-            </div>
+        <div class="logo left">
+            <a href="~/">Sokvihittar Web API</a>
+            <span>powered by InoSoft</span>
         </div>
+        <nav class="menu right">
+            <ul>
+                <li>@Html.ActionLink("Test", "Test", "Home", new { area = "" }, null)</li>
+                <li>@Html.ActionLink("API", "Index", "Help", new { area = "" }, null)</li>
+            </ul>
+        </nav>
     </header>
     @RenderBody()
 

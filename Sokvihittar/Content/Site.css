@@ -4,7 +4,7 @@
 }
 
 body {
-    background-color: #fff;
+    background-color: #F5F5F5;
     border-top: solid 10px #000;
     color: #333;
     font-size: .85em;
@@ -26,10 +26,6 @@ a {
         color: #333;
     }
 
-    a:hover {
-        
-    }
-
 ul {
     margin: 0;
     padding: 0;
@@ -42,17 +38,36 @@ nav, section {
     display: block;
 }
 
+header {
+    margin: 0 auto;
+    padding: 25px 0 10px;
+    width: 617px;
+    overflow: hidden;
+}
+
+    header .logo a {
+        color: #000;
+        font-size: 24px;
+        line-height: 16px;
+        display: block;
+    }
+
+    header .logo span {
+        color: #000;
+        font-size: 11px;
+    }
+
 mark {
     background-color: #a6dbed;
     padding-left: 5px;
     padding-right: 5px;
 }
 
-.float-left {
+.left {
     float: left;
 }
 
-.float-right {
+.right {
     float: right;
 }
 
@@ -429,7 +444,7 @@ label.checkbox {
 }
 
 input, textarea {
-    border: 1px solid #e2e2e2;
+    border: 1px solid #747474;
     background: #fff;
     color: #333;
     font-size: 1.2em;
@@ -457,8 +472,8 @@ textarea {
     input[type="button"],
     button {
         margin: 0;
-        background-color: #eee ;
-        border: 1px solid #e2e2e2;
+        background-color: #A2D1E1 ;
+        border: 1px solid #7FB5C9;
         cursor: pointer;
         font-size: 14px;
         padding: 7px;
