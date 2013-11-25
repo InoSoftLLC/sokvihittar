@@ -42,7 +42,8 @@ namespace Sokvihittar.Crawlers
                         Products = crawlerResult,
                         Count = crawlerResult.Length,
                         Name = crawlerRequest.SourceName,
-                        State = CrawlerRequestState.Success
+                        State = CrawlerRequestState.Success,
+                        Id = crawlerRequest.Id
                     };
                 }
                 catch (Exception ex)
@@ -53,7 +54,8 @@ namespace Sokvihittar.Crawlers
                         Name = crawlerRequest.SourceName,
                         Products = new ProductInfo[0],
                         State = CrawlerRequestState.Failure,
-                        Exception = ex 
+                        Exception = ex,
+                        Id = crawlerRequest.Id
                     };
                 }
                 finally
@@ -66,7 +68,9 @@ namespace Sokvihittar.Crawlers
                     }
                 }
             });
-            return result.ToArray();
+            CrawlerResult[] crawlerResults = result.ToArray();
+            Array.Sort(crawlerResults, (x, y) => x.Id - y.Id);
+            return crawlerResults;
         }
 
     }

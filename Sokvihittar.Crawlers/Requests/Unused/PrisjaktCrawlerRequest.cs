@@ -100,6 +100,8 @@ namespace Sokvihittar.Crawlers.Requests.Unused
 
         public string ProductText { get; private set; }
 
+        public int Id { get; private set; }
+
         public string Domain { get { return "www.fyndiq.se"; }}
     }
 }

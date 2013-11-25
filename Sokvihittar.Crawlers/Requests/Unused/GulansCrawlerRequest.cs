@@ -99,6 +99,11 @@ namespace Sokvihittar.Crawlers.Requests.Unused
             };
         }
 
+        public override int Id
+        {
+            get { throw new NotImplementedException(); }
+        }
+
         public override string Domain
         {
             get { return "www.gulans.se"; }

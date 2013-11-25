@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Common\CrawlerRequestState.cs" />
     <Compile Include="Common\CrawlerResult.cs" />
+    <Compile Include="Common\ICrawlerRequest.cs" />
     <Compile Include="Crawler.cs" />
     <Compile Include="EncodingHelper.cs" />
     <Compile Include="PrisjaktResponse.cs" />

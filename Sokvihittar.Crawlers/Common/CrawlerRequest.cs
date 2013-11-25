@@ -7,21 +7,6 @@ using HtmlAgilityPack;
 
 namespace Sokvihittar.Crawlers.Common
 {
-    public interface ICrawlerRequest
-    {
-        string Domain { get; }
-
-        int Limit { get; }
-
-        string ProductText { get; }
-
-        string SourceName { get; }
-
-        Encoding Encoding { get; }
-
-        ProductInfo[] ProceedSearchRequest();
-    }
-
     public abstract class CrawlerRequest : ICrawlerRequest 
     {
         private HtmlDocument _firstResponseHtml;
@@ -33,7 +18,8 @@ namespace Sokvihittar.Crawlers.Common
             ProductText = productText;
             Limit = limit;
         }
-
+        
+        public abstract int Id { get; }
 
         public abstract string Domain { get; }
 

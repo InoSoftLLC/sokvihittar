@@ -23,5 +23,7 @@ namespace Sokvihittar.Crawlers.Common
 
         [IgnoreDataMember]
         public Exception Exception { get; set; }
+
+        public int Id { get; set; }
     }
 }

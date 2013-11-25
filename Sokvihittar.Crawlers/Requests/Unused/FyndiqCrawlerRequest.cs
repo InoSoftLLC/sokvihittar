@@ -14,6 +14,11 @@ namespace Sokvihittar.Crawlers.Requests.Unused
         {
         }
 
+        public override int Id
+        {
+            get { return 11; }
+        }
+
         public override string Domain
         {
             get { return "fyndiq.se"; }

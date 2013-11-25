@@ -87,6 +87,11 @@ namespace Sokvihittar.Crawlers.Requests
             };
         }
 
+        public override int Id
+        {
+            get { return 3; }
+        }
+
         public override string Domain
         {
             get { return "www.mascus.se"; }

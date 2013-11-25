@@ -19,6 +19,8 @@ namespace Sokvihittar.Crawlers.Requests
             Limit = limit;
         }
 
+        public int Id { get { return 9; } }
+
         public string Domain { get { return "www.annonsborsen.se"; } }
 
         public Encoding Encoding 
