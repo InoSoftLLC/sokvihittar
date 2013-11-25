@@ -71,7 +71,7 @@ namespace Sokvihittar.Crawlers.Requests
            {
                return String.Format(
                    "http://www.pricerunner.se/search?q={0}",
-                   HttpUtility.UrlEncode(ProductText));
+                   HttpUtility.UrlEncode(ProductText, Encoding));
            }
        }
 

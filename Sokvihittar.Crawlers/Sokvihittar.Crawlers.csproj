@@ -62,7 +62,9 @@
     <Compile Include="Common\ProductInfo.cs" />
     <Compile Include="Requests\BarnebysCrawlerRequest.cs" />
     <Compile Include="Requests\AnnonsborsenCrawlerRequest.cs" />
+    <Compile Include="Requests\СlassiccarsCrawlerRequest.cs" />
     <Compile Include="Requests\BlocketCrawlerRequest.cs" />
+    <Compile Include="Requests\FyndtorgetCrawlerRequest.cs" />
     <Compile Include="Requests\LokusCrawlerRequest.cs" />
     <Compile Include="Requests\Unused\FyndiqCrawlerRequest.cs" />
     <Compile Include="Requests\Unused\GulansCrawlerRequest.cs" />
@@ -73,6 +75,8 @@
     <Compile Include="Common\WebRequestHelper.cs" />
     <Compile Include="Requests\Unused\PrisjaktCrawlerRequest.cs" />
     <Compile Include="Requests\TraderaCrawlerRequest.cs" />
+    <Compile Include="СlassiccarsCategory.cs" />
+    <Compile Include="СlassiccarsCrawlerSubRequest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

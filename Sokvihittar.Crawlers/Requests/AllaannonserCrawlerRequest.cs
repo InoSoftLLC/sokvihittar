@@ -32,7 +32,7 @@ namespace Sokvihittar.Crawlers.Requests
             get
             {
                 return String.Format("http://www.allaannonser.se/annonser/?q={0}&sort=last",
-                    HttpUtility.UrlEncode(ProductText));
+                    HttpUtility.UrlEncode(ProductText,Encoding));
             }
         }
 

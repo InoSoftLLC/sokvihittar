@@ -17,7 +17,7 @@ namespace Sokvihittar.Crawlers.Requests
 
         public override int Id
         {
-            get { return 8; }
+            get { return 6; }
         }
 
         public override string Domain
@@ -35,7 +35,7 @@ namespace Sokvihittar.Crawlers.Requests
             get
             {
                 return String.Format("http://www.barnebys.se/a/{0}.html",
-                    HttpUtility.UrlEncode(ProductText));
+                    HttpUtility.UrlEncode(ProductText, Encoding));
             }
         }
 

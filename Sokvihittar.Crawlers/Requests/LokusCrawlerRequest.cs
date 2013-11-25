@@ -33,7 +33,7 @@ namespace Sokvihittar.Crawlers.Requests
 
         public override int Id
         {
-            get { return 10; }
+            get { return 8; }
         }
 
         public override string Domain
@@ -64,7 +64,7 @@ namespace Sokvihittar.Crawlers.Requests
                         "rm1%24SearchForm1%24freetext={0}&ctl00%24fullRegion%24contentRegionFull%24SearchForm1%24SearchForm1%24ProductTypeId=0&ctl00%24fullRegion%24co" +
                         "ntentRegionFull%24SearchForm1%24SearchForm1%24cgCountyId=0&ctl00%24fullRegion%24contentRegionFull%24SearchForm1%24SearchForm1%24searchButton1" +
                         ".x=44&ctl00%24fullRegion%24contentRegionFull%24SearchForm1%24SearchForm1%24searchButton1.y=17&ModalTextbox=&ModalSelect=100",
-                        HttpUtility.UrlEncode(ProductText));
+                        HttpUtility.UrlEncode(ProductText, Encoding));
                 var response = WebRequestHelper.GetPostResponse("http://www.lokus.se/startsida.aspx?mode=1", postText);
                 var url = response.Headers.Get("Location");
                 return String.Format("http://www.lokus.se{0}", url);

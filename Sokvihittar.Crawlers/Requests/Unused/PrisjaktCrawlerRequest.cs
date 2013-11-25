@@ -25,7 +25,7 @@ namespace Sokvihittar.Crawlers.Requests.Unused
             string response = WebRequestHelper.GetResponseHtml(
                 String.Format(
                     "http://www.prisjakt.nu/ajax/server.php?class=Search_Supersearch&method=search&skip_login=1&modes=product,book,raw&limit=20&q={0}",
-                     HttpUtility.UrlEncode(ProductText)),Encoding);
+                     HttpUtility.UrlEncode(ProductText, Encoding)),Encoding);
 
             var serializer = new DataContractJsonSerializer(typeof (PrisjaktResponse));
             object prisjaktResponse;

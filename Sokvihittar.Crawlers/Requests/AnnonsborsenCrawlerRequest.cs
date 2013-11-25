@@ -7,7 +7,6 @@ using System.Text;
 using System.Web;
 using HtmlAgilityPack;
 using Sokvihittar.Crawlers.Common;
-using Sokvihittar.Crawlers.Enums;
 
 namespace Sokvihittar.Crawlers.Requests
 {
@@ -19,7 +18,7 @@ namespace Sokvihittar.Crawlers.Requests
             Limit = limit;
         }
 
-        public int Id { get { return 9; } }
+        public int Id { get { return 7; } }
 
         public string Domain { get { return "www.annonsborsen.se"; } }
 
@@ -166,7 +165,7 @@ namespace Sokvihittar.Crawlers.Requests
         {
             var postText =String.Format(
                     "fastSearchCountries=29&fastSearchCountries=26&fastSearchCountries=27&fastSearchCountries=28&query={0}",
-                    HttpUtility.UrlEncode(ProductText));
+                    HttpUtility.UrlEncode(ProductText,Encoding));
             var response = WebRequestHelper.GetPostResponse("http://www.annonsborsen.se/search/searchFast!save.jspx",
                 postText);
             return response.Cookies["JSESSIONID"];

@@ -21,8 +21,12 @@ namespace Sokvihittar.Crawlers
                 (t, l) => new BlocketCrawlerRequest(t, l),
                 (t, l) => new TraderaCrawlerRequest(t, l),
                 (t, l) => new BarnebysCrawlerRequest(t, l),
-                (t, l) => new AnnonsborsenCrawlerRequest(t, l),
+                //(t, l) => new AnnonsborsenCrawlerRequest(t, l),
                 (t, l) => new LokusCrawlerRequest(t, l),
+                (t, l) => new FyndtorgetCrawlerRequest(t, l),
+                (t, l) => new СlassiccarsCrawlerRequest(t, l),
+                
+                
                 
                 
             };

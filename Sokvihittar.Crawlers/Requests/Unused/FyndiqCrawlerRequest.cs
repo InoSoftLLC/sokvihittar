@@ -36,12 +36,12 @@ namespace Sokvihittar.Crawlers.Requests.Unused
 
         protected override string FirstRequestUrl
         {
-            get { return string.Format("http://fyndiq.se/sok/?q={0}&search=enter", HttpUtility.UrlEncode(ProductText)); }
+            get { return string.Format("http://fyndiq.se/sok/?q={0}&search=enter", HttpUtility.UrlEncode(ProductText, Encoding)); }
         }
 
         protected override string GetNonFirstRequestUrl(int pageNum)
         {
-            return string.Format("http://fyndiq.se/sok/sida-2/?q={0}&search=enter", HttpUtility.UrlEncode(ProductText));
+            return string.Format("http://fyndiq.se/sok/sida-2/?q={0}&search=enter", HttpUtility.UrlEncode(ProductText, Encoding));
         }
 
         protected override ProductInfo GetProductInfoFromNode(HtmlNode node)

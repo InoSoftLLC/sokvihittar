@@ -99,7 +99,7 @@ namespace Sokvihittar.Crawlers.Requests
 
         protected override string GetNonFirstRequestUrl(int pageNum)
         {
-            return string.Format("http://www.mascus.se/{0}/+/+/{1},100,relevance,search.html", HttpUtility.UrlEncode(ProductText), pageNum);
+            return string.Format("http://www.mascus.se/{0}/+/+/{1},100,relevance,search.html", HttpUtility.UrlEncode(ProductText, Encoding), pageNum);
         }
     }
 }

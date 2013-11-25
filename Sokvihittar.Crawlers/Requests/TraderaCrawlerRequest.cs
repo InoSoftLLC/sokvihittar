@@ -16,7 +16,7 @@ namespace Sokvihittar.Crawlers.Requests
 
         public override int Id
         {
-            get { return 6; }
+            get { return 4; }
         }
 
         public override string Domain
@@ -34,14 +34,14 @@ namespace Sokvihittar.Crawlers.Requests
             get
             {
                 return String.Format("http://www.tradera.com/finding.mvc/itemlisting?header=true&search={0}",
-                    HttpUtility.UrlEncode(ProductText));
+                    HttpUtility.UrlEncode(ProductText, Encoding));
             }
         }
 
         protected override string GetNonFirstRequestUrl(int pageNum)
         {
             return String.Format("http://www.tradera.com/finding.mvc/itemlisting?search={0}&page={1}",
-                    HttpUtility.UrlEncode(ProductText),pageNum);
+                    HttpUtility.UrlEncode(ProductText, Encoding),pageNum);
         }
 
         protected override ProductInfo GetProductInfoFromNode(HtmlNode node)

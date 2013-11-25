@@ -5,7 +5,6 @@ using System.Text;
 using System.Web;
 using HtmlAgilityPack;
 using Sokvihittar.Crawlers.Common;
-using Sokvihittar.Crawlers.Enums;
 
 namespace Sokvihittar.Crawlers.Requests.Unused
 {
@@ -30,7 +29,7 @@ namespace Sokvihittar.Crawlers.Requests.Unused
             get
             {
                 return String.Format("https://www.kvd.se/sv/auktion/search.html?q={0}",
-                    HttpUtility.UrlEncode(ProductText));
+                    HttpUtility.UrlEncode(ProductText, Encoding));
             }
         }
 

@@ -5,7 +5,6 @@ using System.Text;
 using System.Web;
 using HtmlAgilityPack;
 using Sokvihittar.Crawlers.Common;
-using Sokvihittar.Crawlers.Enums;
 
 namespace Sokvihittar.Crawlers.Requests
 {
@@ -17,7 +16,7 @@ namespace Sokvihittar.Crawlers.Requests
 
         public override int Id
         {
-            get { return 7; }
+            get { return 5; }
         }
 
         public override string Domain
@@ -40,14 +39,14 @@ namespace Sokvihittar.Crawlers.Requests
             get
             {
                 return String.Format("http://www.blocket.se/hela_sverige?q={0}&cg=0&w=3&st=s&ca=11&is=1&l=0&md=th",
-                    HttpUtility.UrlEncode(ProductText.Replace(' ', '+')));
+                    HttpUtility.UrlEncode(ProductText.Replace(' ', '+'),Encoding));
             }
         }
 
         protected override string GetNonFirstRequestUrl(int pageNum)
         {
             return String.Format("http://www.blocket.se/hela_sverige?q={0}&cg=0&w=3&st=s&ca=11&l=0&md=th&o={1}",
-                    HttpUtility.UrlEncode(ProductText.Replace(' ', '+')), pageNum);
+                    HttpUtility.UrlEncode(ProductText.Replace(' ', '+'),Encoding), pageNum);
         }
 
         protected override ProductInfo GetProductInfoFromNode(HtmlNode node)

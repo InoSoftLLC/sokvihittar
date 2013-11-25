@@ -33,7 +33,8 @@ namespace Sokvihittar.Crawlers.Common
         {
             var request = (HttpWebRequest)WebRequest.Create(url);
             ServicePointManager.UseNagleAlgorithm = false;
-            request.Method = WebRequestMethods.Http.Get;;
+            request.Method = WebRequestMethods.Http.Get;
+            WebRequest.DefaultWebProxy = null;
             request.Proxy = WebRequest.DefaultWebProxy;
             request.KeepAlive = false;
             request.CookieContainer = new CookieContainer();
@@ -71,6 +72,7 @@ namespace Sokvihittar.Crawlers.Common
 
         public static HttpWebResponse GetPostResponse(string url, string postText)
         {
+            WebRequest.DefaultWebProxy = null;
             var request = (HttpWebRequest)WebRequest.Create(url);
             ServicePointManager.UseNagleAlgorithm = false;
             WebRequest.DefaultWebProxy = null;
