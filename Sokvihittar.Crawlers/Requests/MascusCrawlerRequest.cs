@@ -28,7 +28,12 @@ namespace Sokvihittar.Crawlers.Requests
 
         protected override void GetProducts(HtmlNode node, ref List<HtmlNode> result)
         {
-
+            var testNode = node.OwnerDocument.GetElementbyId("searchExalead");
+            if (testNode != null)
+            {
+                if (testNode.ChildNodes.SingleOrDefault(el=>el.Name=="div" && el.GetAttributeValue("class","No class")=="box round_box message_box_not_found")!=null)
+                    return;
+            }
             HtmlNode table=null;
             GetResultTable(node, ref table);
             if (table != null)

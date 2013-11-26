@@ -152,7 +152,7 @@ namespace Sokvihittar.Crawlers.Requests
         private Cookie Search()
         {
             var postText =String.Format(
-                    "fastSearchCountries=29&fastSearchCountries=26&fastSearchCountries=27&fastSearchCountries=28&query={0}",
+                    "fastSearchCountries=29&query={0}",
                     HttpUtility.UrlEncode(ProductText,Encoding));
             var response = WebRequestHelper.GetPostResponse("http://www.annonsborsen.se/search/searchFast!save.jspx",
                 postText);
