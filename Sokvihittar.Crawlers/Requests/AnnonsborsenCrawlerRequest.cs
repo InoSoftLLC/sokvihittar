@@ -124,21 +124,9 @@ namespace Sokvihittar.Crawlers.Requests
             var url = pageNum == 1
                 ? "http://www.annonsborsen.se/search/searchFast.jspx?"
                 : String.Format("http://www.annonsborsen.se/search/searchFast.jspx?offset={0}", 20 * (pageNum - 1));
-            var request = (HttpWebRequest)WebRequest.Create(url);
-            ServicePointManager.UseNagleAlgorithm = false;
-            WebRequest.DefaultWebProxy = null;
-            request.Proxy = WebRequest.DefaultWebProxy;
-            request.Method = WebRequestMethods.Http.Get;
-            if (request.CookieContainer == null)
-            {
-                request.CookieContainer = new CookieContainer();
-            }
-            request.CookieContainer.Add(c);
-            request.KeepAlive = false;
-            request.UserAgent =
-                "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.101 Safari/537.36";
-            request.ProtocolVersion = new Version(1, 1);
-            return WebRequestHelper.GetResponseHtml((HttpWebResponse)request.GetResponse(), Encoding);
+
+          var resp =  WebRequestHelper.GetResponse(url, null, new Cookie[]{c});
+            return WebRequestHelper.GetResponseHtml(resp, Encoding);
         }
 
         private ProductInfo[] ProccedResultPage(string searchResult)
@@ -168,7 +156,9 @@ namespace Sokvihittar.Crawlers.Requests
                     HttpUtility.UrlEncode(ProductText,Encoding));
             var response = WebRequestHelper.GetPostResponse("http://www.annonsborsen.se/search/searchFast!save.jspx",
                 postText);
-            return response.Cookies["JSESSIONID"];
+            var cookie =  response.Cookies["JSESSIONID"];
+            response.Dispose();
+            return cookie;
         }
     }
 }

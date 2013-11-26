@@ -31,6 +31,7 @@ namespace Sokvihittar.Crawlers.Common
 
         public static HttpWebResponse GetResponse(string url, Dictionary<HttpRequestHeader, string> headers=null, Cookie[] cookies =null)
         {
+            ServicePointManager.DefaultConnectionLimit = 1000;
             var request = (HttpWebRequest)WebRequest.Create(url);
             ServicePointManager.UseNagleAlgorithm = false;
             request.Method = WebRequestMethods.Http.Get;
@@ -72,6 +73,7 @@ namespace Sokvihittar.Crawlers.Common
 
         public static HttpWebResponse GetPostResponse(string url, string postText)
         {
+            ServicePointManager.DefaultConnectionLimit = 1000;
             WebRequest.DefaultWebProxy = null;
             var request = (HttpWebRequest)WebRequest.Create(url);
             ServicePointManager.UseNagleAlgorithm = false;
@@ -91,7 +93,7 @@ namespace Sokvihittar.Crawlers.Common
                 "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.101 Safari/537.36";
             request.ProtocolVersion = new Version(1, 1);
             request.AllowAutoRedirect = false;
-            return (HttpWebResponse)request.GetResponse();
+           return (HttpWebResponse)request.GetResponse();
         }
     }
 }

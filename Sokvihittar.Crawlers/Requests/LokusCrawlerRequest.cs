@@ -67,6 +67,7 @@ namespace Sokvihittar.Crawlers.Requests
                         HttpUtility.UrlEncode(ProductText, Encoding));
                 var response = WebRequestHelper.GetPostResponse("http://www.lokus.se/startsida.aspx?mode=1", postText);
                 var url = response.Headers.Get("Location");
+                response.Dispose();
                 return String.Format("http://www.lokus.se{0}", url);
             }
         }
