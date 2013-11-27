@@ -1,10 +1,11 @@
-﻿using System.Activities.Expressions;
-using System.IO;
+﻿using System;
+using System.Activities.Expressions;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Runtime.Serialization.Json;
 using System.Text;
+using System.Threading;
 using System.Web.Http;
 using Sokvihittar.Crawlers;
 using Sokvihittar.Crawlers.Common;
@@ -16,6 +17,13 @@ namespace Sokvihittar.Controllers
     /// </summary>
     public class SearchController : ApiController
     {
+        public string LogName
+        {
+            get { return "Sokvihittar.Real.log"; }
+        }
+
+        private object _sync = new object();
+
         /// <summary>
         /// Searches for items.
         /// </summary>
@@ -25,37 +33,67 @@ namespace Sokvihittar.Controllers
         [HttpGet]
         public HttpResponseMessage Index(string text, int limit, string callBack)
         {
+            var watch = new Stopwatch();
+            watch.Start();
             callBack = callBack.Replace("?", "");
             var response = new HttpResponseMessage();
             var content = new StringBuilder();
             content.Append(callBack).Append(" && ").Append(callBack).Append("(");
-            var result = Serialize(Crawler.Search(text, limit));
+            var result = JsonHelper.Serialize(Crawler.Search(text, limit));
             content.Append(result).Append(")");
             response.Content = new StringContent(content.ToString(), new UTF8Encoding());
-            response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/javascript") { CharSet = "utf-8" };
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/javascript") {CharSet = "utf-8"};
+            watch.Stop();
+            ThreadPool.QueueUserWorkItem(_ =>
+            {
+                lock (_sync)
+                {
+                    StatisticsHelper.WriteStatistics(new SearchRequestStatiscs
+                    {
+                        ExecutionTime = watch.ElapsedMilliseconds,
+                        IsTest = true,
+                        ProductText = text,
+                        Limit = limit,
+                        Time = DateTime.UtcNow
+                    }, LogName);
+                }
+            });
             return response;
+
         }
 
         [HttpGet]
         public CrawlerResult[] Index(string text, int limit)
         {
-            return Crawler.Search(text, limit);
+            var watch = new Stopwatch();
+            watch.Start();
+            var response = Crawler.Search(text, limit);
+            watch.Stop();
+            ThreadPool.QueueUserWorkItem(_ =>
+            {
+                lock (_sync)
+                {
+                    StatisticsHelper.WriteStatistics(new SearchRequestStatiscs
+                    {
+                        ExecutionTime = watch.ElapsedMilliseconds,
+                        IsTest = true,
+                        ProductText = text,
+                        Limit = limit,
+                        Time = DateTime.UtcNow
+                    }, LogName);
+                }
+            });
+            return response;
         }
 
 
-        private string Serialize(CrawlerResult[] crawlerResults)
+        [HttpGet]
+        public string Statistics()
         {
-            var serializer = new DataContractJsonSerializer(crawlerResults.GetType());
-            string result;
-            using (var stream = new MemoryStream())
+            lock (_sync)
             {
-                serializer.WriteObject(stream, crawlerResults);
-                var buf = new byte[stream.Length];
-                stream.Position = 0;
-                stream.Read(buf, 0, buf.Length);
-                result = Encoding.UTF8.GetString(buf);
+                return StatisticsHelper.ReadStatistics(LogName);
             }
-            return result;
         }
     }
 }

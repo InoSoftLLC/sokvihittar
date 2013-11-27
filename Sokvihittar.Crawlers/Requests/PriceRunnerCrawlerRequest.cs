@@ -308,7 +308,7 @@ namespace Sokvihittar.Crawlers.Requests
                 var priceNode =
                     node.SelectSingleNode("//div[@class='product-wrapper']").SelectSingleNode(".//p[@class='price']");
                 string productId = node.Id.Replace("prod-", "");
-                return new ProductInfo()
+                return new ProductInfo
                 {
                     ImageUrl = HttpUtility.HtmlDecode(imageUrl),
                     Date = "No date",
