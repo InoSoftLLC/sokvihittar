@@ -14,31 +14,53 @@ namespace Sokvihittar.Crawlers.Requests
         {
         }
 
+        /// <summary>
+        /// Crawler Id, used for sorting crawler results.
+        /// </summary>
         public override int Id
         {
             get { return 9; }
         }
 
+        /// <summary>
+        /// Source website domain.
+        /// </summary>
         public override string Domain
         {
             get { return "www.fyndtorget.se"; }
         }
 
+        /// <summary>
+        /// Name of source website.
+        /// </summary>
         public override string SourceName
         {
             get { return "Fyndtorget"; }
         }
 
+        /// <summary>
+        /// Url to get first result page.
+        /// </summary>
         protected override string FirstRequestUrl
         {
             get { return String.Format("http://www.fyndtorget.se/sokresultat.php?loc=0&kat=0&sokord={0}",HttpUtility.UrlEncode(ProductText, Encoding)); }
         }
 
+        /// <summary>
+        /// Returns url to get selected rusult page.
+        /// </summary>
+        /// <param name="pageNum">Number of needed page.</param>
+        /// <returns>String containing url.</returns>
         protected override string GetNonFirstRequestUrl(int pageNum)
         {
             return String.Format("{0}&offset={1}", FirstRequestUrl, 45*(pageNum-1));
         }
 
+        /// <summary>
+        /// Gets product info from html node.
+        /// </summary>
+        /// <param name="node">html node conatinig information about product.</param>
+        /// <returns>Model containing information about product.</returns>
         protected override ProductInfo GetProductInfoFromNode(HtmlNode node)
         {
             var productNodes = node.SelectNodes(".//td");
@@ -83,7 +105,7 @@ namespace Sokvihittar.Crawlers.Requests
                 ImageUrl = HttpUtility.HtmlDecode(imageUrl),
                 Date = date,
                 ProductUrl = HttpUtility.HtmlDecode(productUrl),
-                Name = HttpUtility.HtmlDecode(title),
+                Title = HttpUtility.HtmlDecode(title),
                 Price = price.Trim().Replace("\t", "").Replace("\n", ""),
                 Id = productId,
                 Location = location,
@@ -91,6 +113,11 @@ namespace Sokvihittar.Crawlers.Requests
             };
         }
 
+        /// <summary>
+        /// Get html nodes conatinig information about products.
+        /// </summary>
+        /// <param name="node">Html node of search result page.</param>
+        /// <param name="result">List of html nodes conatinig information about products.</param>
         protected override void GetProducts(HtmlNode node, ref List<HtmlNode> result)
         {
             if (node.GetAttributeValue("role", "no role") == "listitem")
@@ -103,6 +130,9 @@ namespace Sokvihittar.Crawlers.Requests
             }
         }
 
+        /// <summary>
+        /// Encoding used on source website.
+        /// </summary>
         public override Encoding Encoding
         {
             get { return Encoding.GetEncoding(EncodingHelper.CodePages["iso-8859-1"]); }

@@ -13,7 +13,7 @@ namespace Sokvihittar.Crawlers.Common
         public string Name { get; set; }
 
         [DataMember(Name = "state")]
-        public CrawlerRequestState State { get; set; }
+        public SearchResultStatus State { get; set; }
 
         [DataMember(Name = "count")]
         public int Count { get; set; }

@@ -67,7 +67,7 @@ namespace Sokvihittar.Crawlers.Requests.Unused
                 ImageUrl = HttpUtility.HtmlDecode(imageUrl),
                 Date = "No date",
                 ProductUrl = HttpUtility.HtmlDecode(productUrl),
-                Name = HttpUtility.HtmlDecode(title).Trim().Replace("\t", "").Replace("\n", ""),
+                Title = HttpUtility.HtmlDecode(title).Trim().Replace("\t", "").Replace("\n", ""),
                 Price = HttpUtility.HtmlDecode(priceNode.InnerText).Trim().Replace("\t", "").Replace("\n", ""),
                 Id = productId,
                 Location = HttpUtility.HtmlDecode("No location"),

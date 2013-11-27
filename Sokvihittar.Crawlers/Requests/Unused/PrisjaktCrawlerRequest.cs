@@ -20,7 +20,7 @@ namespace Sokvihittar.Crawlers.Requests.Unused
 
         public Encoding Encoding { get { return Encoding.UTF8; } }
 
-        public ProductInfo[] ProceedSearchRequest()
+        public ProductInfo[] ExecuteSearchRequest()
         {
             string response = WebRequestHelper.GetResponseHtml(
                 String.Format(
@@ -70,7 +70,7 @@ namespace Sokvihittar.Crawlers.Requests.Unused
                             Id = productInfo.id.ToString(CultureInfo.InvariantCulture),
                             ImageUrl = "no image",
                             Location = "No location",
-                            Name = productInfo.name,
+                            Title = productInfo.name,
                             Price = productInfo.price.display,
                             ProductUrl = productInfo.url
                         });

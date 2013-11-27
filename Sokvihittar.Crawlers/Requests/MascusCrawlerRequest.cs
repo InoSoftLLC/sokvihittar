@@ -14,18 +14,32 @@ namespace Sokvihittar.Crawlers.Requests
         {
         }
 
+        /// <summary>
+        /// Name of source website.
+        /// </summary>
         public override string SourceName { get { return "Mascus"; } }
 
+        /// <summary>
+        /// Encoding used on source website.
+        /// </summary>
         public override Encoding Encoding
         {
             get { return Encoding.UTF8; }
         }
 
+        /// <summary>
+        /// Url to get first result page.
+        /// </summary>
         protected override string FirstRequestUrl
         {
             get { return GetNonFirstRequestUrl(1); }
         }
 
+        /// <summary>
+        /// Get html nodes conatinig information about products.
+        /// </summary>
+        /// <param name="node">Html node of search result page.</param>
+        /// <param name="result">List of html nodes conatinig information about products.</param>
         protected override void GetProducts(HtmlNode node, ref List<HtmlNode> result)
         {
             var testNode = node.OwnerDocument.GetElementbyId("searchExalead");
@@ -42,6 +56,11 @@ namespace Sokvihittar.Crawlers.Requests
             }
         }
 
+        /// <summary>
+        /// Gets result table from search result page.
+        /// </summary>
+        /// <param name="node">Node containing</param>
+        /// <param name="table">List of html nodes conatinig information about product.</param>
         private void GetResultTable(HtmlNode node, ref HtmlNode table)
         {
             if (node.Name == "table" && node.GetAttributeValue("class", "No class") == "search_results")
@@ -57,6 +76,11 @@ namespace Sokvihittar.Crawlers.Requests
             }
         }
 
+        /// <summary>
+        /// Gets product info from html node.
+        /// </summary>
+        /// <param name="node">html node conatinig information about product.</param>
+        /// <returns>Model containing information about product.</returns>
         protected override ProductInfo GetProductInfoFromNode(HtmlNode node)
         {
             var productIdNode = node.ChildNodes.First().SelectSingleNode(".//input[1]");
@@ -83,7 +107,7 @@ namespace Sokvihittar.Crawlers.Requests
                 ImageUrl = HttpUtility.HtmlDecode(imageUrl),
                 Date = "No date",
                 ProductUrl = HttpUtility.HtmlDecode(productUrl),
-                Name = HttpUtility.HtmlDecode(title),
+                Title = HttpUtility.HtmlDecode(title),
                 Price = HttpUtility.HtmlDecode(priceNode.InnerText).Replace("\t","").Replace("\n",""),
                 Id = productId,
                 Location = HttpUtility.HtmlDecode(location.InnerText),
@@ -92,16 +116,27 @@ namespace Sokvihittar.Crawlers.Requests
             };
         }
 
+        /// <summary>
+        /// Crawler Id, used for sorting crawler results.
+        /// </summary>
         public override int Id
         {
             get { return 3; }
         }
 
+        /// <summary>
+        /// Source website domain.
+        /// </summary>
         public override string Domain
         {
             get { return "www.mascus.se"; }
         }
 
+        /// <summary>
+        /// Returns url to get selected rusult page.
+        /// </summary>
+        /// <param name="pageNum">Number of needed page.</param>
+        /// <returns>String containing url.</returns>
         protected override string GetNonFirstRequestUrl(int pageNum)
         {
             return string.Format("http://www.mascus.se/{0}/+/+/{1},100,relevance,search.html", HttpUtility.UrlEncode(ProductText, Encoding), pageNum);

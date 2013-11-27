@@ -11,6 +11,9 @@ namespace Sokvihittar.Crawlers.Requests
 {
     class LokusCrawlerRequest : CrawlerRequest
     {
+        /// <summary>
+        /// Headers of search requests.
+        /// </summary>
         public Dictionary<HttpRequestHeader, string> RequestHeaders
         {
             get
@@ -31,26 +34,41 @@ namespace Sokvihittar.Crawlers.Requests
         {
         }
 
+        /// <summary>
+        /// Crawler Id, used for sorting crawler results.
+        /// </summary>
         public override int Id
         {
             get { return 8; }
         }
 
+        /// <summary>
+        /// Source website domain.
+        /// </summary>
         public override string Domain
         {
             get { return "www.lokus.se" ; }
         }
 
+        /// <summary>
+        /// Encoding used on source website.
+        /// </summary>
         public override Encoding Encoding
         {
             get { return Encoding.UTF8; }
         }
 
+        /// <summary>
+        /// Name of source website.
+        /// </summary>
         public override string SourceName
         {
             get { return "Lokus" ; }
         }
 
+        /// <summary>
+        /// Url to get first result page.
+        /// </summary>
         protected override string FirstRequestUrl
         {
             get
@@ -72,7 +90,11 @@ namespace Sokvihittar.Crawlers.Requests
             }
         }
 
-        public override ProductInfo[] ProceedSearchRequest()
+        /// <summary>
+        /// Executes search request, forms and returns product information models.
+        /// </summary>
+        /// <returns>Returns array of models containing information about product.</returns>
+        public override ProductInfo[] ExecuteSearchRequest()
         {
             var products = new List<ProductInfo>();
             var url = FirstRequestUrl;
@@ -108,11 +130,21 @@ namespace Sokvihittar.Crawlers.Requests
             return products.Take(Limit).ToArray();
         }
 
+        /// <summary>
+        /// Returns url to get selected rusult page.
+        /// </summary>
+        /// <param name="pageNum">Number of needed page.</param>
+        /// <returns>String containing url.</returns>
         protected override string GetNonFirstRequestUrl(int pageNum)
         {
             throw new Exception("Unexpected usage of method \"GetNonFirstRequestUrl\". \"GetNextPageRequestUrl\" method should be used instead.");
         }
 
+        /// <summary>
+        /// Gets product info from html node.
+        /// </summary>
+        /// <param name="node">html node conatinig information about product.</param>
+        /// <returns>Model containing information about product.</returns>
         protected override ProductInfo GetProductInfoFromNode(HtmlNode node)
         {
             String imageUrl;
@@ -167,7 +199,7 @@ namespace Sokvihittar.Crawlers.Requests
                 ImageUrl = HttpUtility.HtmlDecode(imageUrl),
                 Date = date,
                 ProductUrl = HttpUtility.HtmlDecode(productUrl),
-                Name = HttpUtility.HtmlDecode(title).Trim(),
+                Title = HttpUtility.HtmlDecode(title).Trim(),
                 Price = HttpUtility.HtmlDecode(price).Trim().Replace("\t", "").Replace("\n", ""),
                 Id = "No id",
                 Location = HttpUtility.HtmlDecode(location).Trim().Replace("\t", "").Replace("\n", ""),
@@ -175,6 +207,11 @@ namespace Sokvihittar.Crawlers.Requests
             };
         }
 
+        /// <summary>
+        /// Get html nodes conatinig information about products.
+        /// </summary>
+        /// <param name="node">Html node of search result page.</param>
+        /// <param name="result">List of html nodes conatinig information about products.</param>
         protected override void GetProducts(HtmlNode node, ref List<HtmlNode> result)
         {
             if (node.GetAttributeValue("class", "No class") == "hrefAddQueryStringToDiv searchListItem clearfix")
@@ -187,6 +224,11 @@ namespace Sokvihittar.Crawlers.Requests
             }
         }
 
+        /// <summary>
+        /// Gets requst url to next search result page.
+        /// </summary>
+        /// <param name="doc">Html document containing last search result page response.</param>
+        /// <returns>String containig url to next search result page.</returns>
         private string GetNextPageRequestUrl(HtmlDocument doc)
         {
             try

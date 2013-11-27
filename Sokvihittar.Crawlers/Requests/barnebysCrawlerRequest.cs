@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using HtmlAgilityPack;
 using Sokvihittar.Crawlers.Common;
@@ -15,21 +14,40 @@ namespace Sokvihittar.Crawlers.Requests
         {
         }
 
-        public override int Id
-        {
-            get { return 6; }
-        }
-
+        /// <summary>
+        /// Source website domain.
+        /// </summary>
         public override string Domain
         {
             get { return "www.barnebys.se"; }
         }
 
+        /// <summary>
+        /// Encoding used on source website.
+        /// </summary>
+        public override Encoding Encoding
+        {
+            get { return Encoding.UTF8; }
+        }
+
+        /// <summary>
+        /// Crawler Id, used for sorting crawler results.
+        /// </summary>
+        public override int Id
+        {
+            get { return 6; }
+        }
+        /// <summary>
+        /// Name of source website.
+        /// </summary>
         public override string SourceName
         {
             get { return "Barnebys"; }
         }
 
+        /// <summary>
+        /// Url to get first result page.
+        /// </summary>
         protected override string FirstRequestUrl
         {
             get
@@ -39,11 +57,21 @@ namespace Sokvihittar.Crawlers.Requests
             }
         }
 
+        /// <summary>
+        /// Returns url to get selected rusult page.
+        /// </summary>
+        /// <param name="pageNum">Number of needed page.</param>
+        /// <returns>String containing url.</returns>
         protected override string GetNonFirstRequestUrl(int pageNum)
         {
             return String.Format("{0}?&o={1}", FirstRequestUrl, (pageNum - 1)*30);
         }
 
+        /// <summary>
+        /// Gets product info from html node.
+        /// </summary>
+        /// <param name="node">html node conatinig information about product.</param>
+        /// <returns>Model containing information about product.</returns>
         protected override ProductInfo GetProductInfoFromNode(HtmlNode node)
         {
             string imageUrl;
@@ -86,7 +114,7 @@ namespace Sokvihittar.Crawlers.Requests
                 ImageUrl = HttpUtility.HtmlDecode(imageUrl),
                 Date = "No date",
                 ProductUrl = HttpUtility.HtmlDecode(productUrl),
-                Name = HttpUtility.HtmlDecode(title),
+                Title = HttpUtility.HtmlDecode(title),
                 Price = HttpUtility.HtmlDecode(priceNode.InnerText).Trim().Replace("\t", "").Replace("\n", "").Replace("\t", "").Replace("\n", ""),
                 Id = "No id",
                 Location = "No location",
@@ -94,6 +122,11 @@ namespace Sokvihittar.Crawlers.Requests
             };
         }
 
+        /// <summary>
+        /// Get html nodes conatinig information about products.
+        /// </summary>
+        /// <param name="node">Html node of search result page.</param>
+        /// <param name="result">List of html nodes conatinig information about products.</param>
         protected override void GetProducts(HtmlNode node, ref List<HtmlNode> result)
         {
             if (node.GetAttributeValue("class", "No class")=="hit" && node.SelectSingleNode(".//div[@class='sold-lot']")==null)
@@ -104,11 +137,6 @@ namespace Sokvihittar.Crawlers.Requests
             {
                 GetProducts(childNode, ref  result);
             }
-        }
-
-        public override Encoding Encoding
-        {
-            get { return Encoding.UTF8; }
         }
     }
 }

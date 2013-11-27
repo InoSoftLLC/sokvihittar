@@ -8,12 +8,24 @@ namespace Sokvihittar.Crawlers.Common
 {
     public static class WebRequestHelper
     {
+        /// <summary>
+        /// Gets response html string for selected url.
+        /// </summary>
+        /// <param name="url">Request url.</param>
+        /// <param name="encoding">Encoding of requested website.</param>
+        /// <returns>String containing html response.</returns>
         public static string GetResponseHtml(string url, Encoding encoding)
         {
             HttpWebResponse response = GetResponse(url);
             return GetResponseHtml(response, encoding);
         }
 
+        /// <summary>
+        /// Gets response html string from web response.
+        /// </summary>
+        /// <param name="response">Web response.</param>
+        /// <param name="encoding">Encoding of requested website.</param>
+        /// <returns>String containing html response.</returns>
         public static string GetResponseHtml(HttpWebResponse response, Encoding encoding)
         {
             string result;
@@ -29,6 +41,13 @@ namespace Sokvihittar.Crawlers.Common
             return result;
         }
 
+        /// <summary>
+        /// Gets web response for selected site.
+        /// </summary>
+        /// <param name="url">Request url</param>
+        /// <param name="headers">Request headers.</param>
+        /// <param name="cookies">Request cookies.</param>
+        /// <returns>Http web response.</returns>
         public static HttpWebResponse GetResponse(string url, Dictionary<HttpRequestHeader, string> headers=null, Cookie[] cookies =null)
         {
             ServicePointManager.DefaultConnectionLimit = 1000;
@@ -66,12 +85,13 @@ namespace Sokvihittar.Crawlers.Common
 
         }
 
-        public static string GetResponceUrl(string requestUrl)
-        {
-            return GetResponse(requestUrl).ResponseUri.ToString();
-        }
-
-        public static HttpWebResponse GetPostResponse(string url, string postText)
+        /// <summary>
+        /// Gets response for Post request.
+        /// </summary>
+        /// <param name="url">Request url.</param>
+        /// <param name="requestBody">Request body.</param>
+        /// <returns>Http web response.</returns>
+        public static HttpWebResponse GetPostResponse(string url, string requestBody)
         {
             ServicePointManager.DefaultConnectionLimit = 1000;
             WebRequest.DefaultWebProxy = null;
@@ -85,7 +105,7 @@ namespace Sokvihittar.Crawlers.Common
             using (var requestStream = request.GetRequestStream())
             using (var writer = new StreamWriter(requestStream))
             {
-                writer.Write(postText);
+                writer.Write(requestBody);
             }
             request.CookieContainer = new CookieContainer();
             request.KeepAlive = false;

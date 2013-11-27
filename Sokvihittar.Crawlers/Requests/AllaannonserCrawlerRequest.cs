@@ -11,22 +11,34 @@ namespace Sokvihittar.Crawlers.Requests
     public class AllaannonserCrawlerRequest : CrawlerRequest
     {
 
+        /// <summary>
+        /// Creates instance of crawler result class.
+        /// </summary>
+        /// <param name="productText">Search text.</param>
+        /// <param name="limit">Needed product count.</param>
         public AllaannonserCrawlerRequest(string productText, int limit) : base(productText, limit)
         {
         }
-
-
-
+        
+        /// <summary>
+        /// Name of source website.
+        /// </summary>
         public override string SourceName
         {
             get { return "Allaannonser"; }
         }
 
+        /// <summary>
+        /// Encoding used on source website.
+        /// </summary>
         public override Encoding Encoding
         {
             get { return Encoding.UTF8; }
         }
 
+        /// <summary>
+        /// Url to get first result page.
+        /// </summary>
         protected override string FirstRequestUrl
         {
             get
@@ -36,11 +48,22 @@ namespace Sokvihittar.Crawlers.Requests
             }
         }
 
+        /// <summary>
+        /// Returns url to get selected rusult page.
+        /// </summary>
+        /// <param name="pageNum">Number of needed page.</param>
+        /// <returns>String containing url.</returns>
         protected override string GetNonFirstRequestUrl(int pageNum)
         {
             var url = String.Format("{0}&o={1}", FirstRequestUrl, pageNum);
             return url;
         }
+
+        /// <summary>
+        /// Gets product info from html node.
+        /// </summary>
+        /// <param name="node">html node conatinig information about product.</param>
+        /// <returns>Model containing information about product.</returns>
         protected override ProductInfo GetProductInfoFromNode(HtmlNode node)
         {
             try
@@ -88,7 +111,7 @@ namespace Sokvihittar.Crawlers.Requests
                     ImageUrl = HttpUtility.HtmlDecode(imageUrl),
                     Date = date,
                     ProductUrl = HttpUtility.HtmlDecode(productUrl),
-                    Name = HttpUtility.HtmlDecode(title),
+                    Title = HttpUtility.HtmlDecode(title),
                     Price = HttpUtility.HtmlDecode(priceNode.InnerText).Trim().Replace("\t", "").Replace("\n", "").Replace("\t", "").Replace("\n", ""),
                     Id = productId,
                     Location = HttpUtility.HtmlDecode(location),
@@ -103,16 +126,27 @@ namespace Sokvihittar.Crawlers.Requests
             }
         }
 
+        /// <summary>
+        /// Crawler Id, used for sorting crawler results.
+        /// </summary>
         public override int Id
         {
             get { return 1; }
         }
 
+        /// <summary>
+        /// Source website domain.
+        /// </summary>
         public override string Domain
         {
             get { return "www.allaannonser.se"; }
         }
 
+        /// <summary>
+        /// Get html nodes conatinig information about products.
+        /// </summary>
+        /// <param name="node">Html node of search result page.</param>
+        /// <param name="result">List of html nodes conatinig information about products.</param>
         protected override void GetProducts(HtmlNode node, ref List<HtmlNode> result)
         {
             if (node.Id.Contains("hitlist_row"))

@@ -1,6 +1,9 @@
 ﻿namespace Sokvihittar.Crawlers.Common
 {
-    public enum CrawlerRequestState
+    /// <summary>
+    /// Search result status.
+    /// </summary>
+    public enum SearchResultStatus
     {
         None = 0,
         Success = 1,

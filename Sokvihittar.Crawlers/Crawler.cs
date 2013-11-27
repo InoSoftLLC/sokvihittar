@@ -9,10 +9,15 @@ namespace Sokvihittar.Crawlers
 {
     public static class Crawler
     {
-
+        /// <summary>
+        /// Creates, executes crawler requests. Forms and returns results.
+        /// </summary>
+        /// <param name="text">Search text.</param>
+        /// <param name="limit">Limit of products per site.</param>
+        /// <returns></returns>
         public static CrawlerResult[] Search(string text, int limit)
         {
-            var crawlers = new List<Func<string, int, ICrawlerRequest>>
+            var crawlerRequests = new List<Func<string, int, ICrawlerRequest>>
             {
                 //Add crawlers here.
                 (t, l) => new AllaannonserCrawlerRequest(t, l),
@@ -25,54 +30,50 @@ namespace Sokvihittar.Crawlers
                 (t, l) => new LokusCrawlerRequest(t, l),
                 (t, l) => new FyndtorgetCrawlerRequest(t, l),
                 (t, l) => new СlassiccarsCrawlerRequest(t, l),
-                
-                
-                
-                
             };
  
-            var result = new List<CrawlerResult>();
-            Parallel.ForEach(crawlers, crawler =>
+            var results = new List<CrawlerResult>();
+            Parallel.ForEach(crawlerRequests, request =>
             {
                 var watch = new Stopwatch();
                 watch.Start();
-                var crawlerRequest = crawler(text, limit);
-                CrawlerResult res = null;
+                var crawlerRequest = request(text, limit);
+                CrawlerResult result = null;
                 try
                 {
-                    var crawlerResult = crawlerRequest.ProceedSearchRequest();
-                    res = new CrawlerResult
+                    var crawlerResult = crawlerRequest.ExecuteSearchRequest();
+                    result = new CrawlerResult
                     {
                         Products = crawlerResult,
                         Count = crawlerResult.Length,
                         Name = crawlerRequest.SourceName,
-                        State = CrawlerRequestState.Success,
+                        State = SearchResultStatus.Success,
                         Id = crawlerRequest.Id
                     };
                 }
                 catch (Exception ex)
                 {
-                    res = new CrawlerResult
+                    result = new CrawlerResult
                     {
                         Count = 0,
                         Name = crawlerRequest.SourceName,
                         Products = new ProductInfo[0],
-                        State = CrawlerRequestState.Failure,
+                        State = SearchResultStatus.Failure,
                         Exception = ex,
                         Id = crawlerRequest.Id
                     };
                 }
                 finally
                 {
-                    lock (result)
+                    lock (results)
                     {
                         watch.Stop();
-                        res.ExecutionTime = watch.ElapsedMilliseconds;
-                        result.Add(res);
+                        result.ExecutionTime = watch.ElapsedMilliseconds;
+                        results.Add(result);
                     }
                 }
             });
-            CrawlerResult[] crawlerResults = result.ToArray();
+            CrawlerResult[] crawlerResults = results.ToArray();
             Array.Sort(crawlerResults, (x, y) => x.Id - y.Id);
             return crawlerResults;
         }

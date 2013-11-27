@@ -7,24 +7,51 @@ using HtmlAgilityPack;
 
 namespace Sokvihittar.Crawlers.Common
 {
+    /// <summary>
+    /// Class containing logic of crawler search request.
+    /// </summary>
     public abstract class CrawlerRequest : ICrawlerRequest 
     {
+        /// <summary>
+        /// Html document containing html text of first result page response.
+        /// </summary>
         private HtmlDocument _firstResponseHtml;
 
+        /// <summary>
+        /// Url of first result response page.
+        /// </summary>
         private string _firstResponseUrl;
 
+
+        /// <summary>
+        /// Creates instance of crawler result class.
+        /// </summary>
+        /// <param name="productText">Search text.</param>
+        /// <param name="limit">Needed product count.</param>
         protected CrawlerRequest(string productText, int limit)
         {
             ProductText = productText;
             Limit = limit;
         }
         
+        /// <summary>
+        /// Crawler Id, used for sorting crawler results.
+        /// </summary>
         public abstract int Id { get; }
 
+        /// <summary>
+        /// Source website domain.
+        /// </summary>
         public abstract string Domain { get; }
 
+        /// <summary>
+        /// Encoding used on source website.
+        /// </summary>
         public abstract Encoding Encoding { get; }
 
+        /// <summary>
+        /// Html document containing html text of first result page response.
+        /// </summary>
         public HtmlDocument FirstResponseHtmlDocument
         {
             get
@@ -38,6 +65,9 @@ namespace Sokvihittar.Crawlers.Common
             
         }
 
+        /// <summary>
+        /// Url of first result response page.
+        /// </summary>
         public string FirstResponseUrl
         {
             get
@@ -50,15 +80,31 @@ namespace Sokvihittar.Crawlers.Common
             }
         }
 
+        /// <summary>
+        /// Needed product count.
+        /// </summary>
         public int Limit { get; private set; }
 
+        /// <summary>
+        /// Search text.
+        /// </summary>
         public string ProductText { get; private set; }
 
+        /// <summary>
+        /// Name of source website.
+        /// </summary>
         public abstract string SourceName { get; }
 
+        /// <summary>
+        /// Url to get first result page.
+        /// </summary>
         protected abstract string FirstRequestUrl { get; }
 
-        public virtual ProductInfo[] ProceedSearchRequest()
+        /// <summary>
+        /// Executes search request, forms and returns product information models.
+        /// </summary>
+        /// <returns>Returns array of models containing information about product.</returns>
+        public virtual ProductInfo[] ExecuteSearchRequest()
         {
             var products = new List<ProductInfo>();
             var prevResult = ProccedResultPage(FirstResponseHtmlDocument).ToArray();
@@ -86,12 +132,33 @@ namespace Sokvihittar.Crawlers.Common
             return products.Take(Limit).ToArray();
         }
 
+        /// <summary>
+        /// Returns url to get selected rusult page.
+        /// </summary>
+        /// <param name="pageNum">Number of needed page.</param>
+        /// <returns>String containing url.</returns>
         protected abstract string GetNonFirstRequestUrl(int pageNum);
 
+        /// <summary>
+        /// Gets product info from html node.
+        /// </summary>
+        /// <param name="node">html node conatinig information about product.</param>
+        /// <returns>Model containing information about product.</returns>
         protected abstract ProductInfo GetProductInfoFromNode(HtmlNode node);
 
+        /// <summary>
+        /// Get html nodes conatinig information about products.
+        /// </summary>
+        /// <param name="node">Html node of search result page.</param>
+        /// <param name="result">List of html nodes conatinig information about products.</param>
         protected abstract void GetProducts(HtmlNode node, ref List<HtmlNode> result);
 
+
+        /// <summary>
+        /// Get product information from search result page.
+        /// </summary>
+        /// <param name="html">String containg search result page response.</param>
+        /// <returns>Returns collection of models containing information about product.</returns>
         protected IEnumerable<ProductInfo> ProccedResultPage(string html)
         {
             var htmlDoc = new HtmlDocument();
@@ -99,6 +166,11 @@ namespace Sokvihittar.Crawlers.Common
             return ProccedResultPage(htmlDoc);
         }
 
+        /// <summary>
+        /// Get product information from search result page.
+        /// </summary>
+        /// <param name="htmlDoc">Html document</param>
+        /// <returns>Returns collection of models containing information about product.</returns>
         protected IEnumerable<ProductInfo> ProccedResultPage(HtmlDocument htmlDoc)
         {
             var productNodes = new List<HtmlNode>();
@@ -119,6 +191,9 @@ namespace Sokvihittar.Crawlers.Common
             return result;
         }
 
+        /// <summary>
+        /// Gets first search result page response. Sets firs response url and html.
+        /// </summary>
         private void GetFirstResponse()
         {
                 _firstResponseHtml  = new HtmlDocument();

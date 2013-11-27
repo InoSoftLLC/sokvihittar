@@ -10,33 +10,53 @@ namespace Sokvihittar.Crawlers
 {
     class СlassiccarsCrawlerSubRequest : CrawlerRequest
     {
+        /// <summary>
+        /// Catego
+        /// </summary>
         private readonly string _category;
-        
+
         public СlassiccarsCrawlerSubRequest(string productText, int limit, string category) : base(productText, limit)
         {
             _category = category;
         }
 
+        /// <summary>
+        /// Crawler Id, used for sorting crawler results.
+        /// </summary>
         public override int Id
         {
             get { return 11; }
         }
 
+        /// <summary>
+        /// Source website domain.
+        /// </summary>
         public override string Domain
         {
             get { return "www.classiccars.se"; }
         }
 
+        /// <summary>
+        /// Name of source website.
+        /// </summary>
         public override string SourceName
         {
             get {  return "Сlassiccars"; }
         }
 
+        /// <summary>
+        /// Url to get first result page.
+        /// </summary>
         protected override string FirstRequestUrl
         {
             get { return GetNonFirstRequestUrl(1); }
         }
 
+        /// <summary>
+        /// Returns url to get selected rusult page.
+        /// </summary>
+        /// <param name="pageNum">Number of needed page.</param>
+        /// <returns>String containing url.</returns>
         protected override string GetNonFirstRequestUrl(int pageNum)
         {
             switch (_category)
@@ -79,6 +99,11 @@ namespace Sokvihittar.Crawlers
 
         }
 
+        /// <summary>
+        /// Gets product info from html node.
+        /// </summary>
+        /// <param name="node">html node conatinig information about product.</param>
+        /// <returns>Model containing information about product.</returns>
         protected override ProductInfo GetProductInfoFromNode(HtmlNode node)
         {
             if (_category == "Delar")
@@ -115,7 +140,7 @@ namespace Sokvihittar.Crawlers
                 ImageUrl = HttpUtility.HtmlDecode(imageUrl),
                 Date = date,
                 ProductUrl = HttpUtility.HtmlDecode(productUrl),
-                Name = HttpUtility.HtmlDecode(title),
+                Title = HttpUtility.HtmlDecode(title),
                 Price = price,
                 Id = "No id",
                 Location = "No location",
@@ -161,7 +186,7 @@ namespace Sokvihittar.Crawlers
                 ImageUrl = HttpUtility.HtmlDecode(imageUrl),
                 Date = date,
                 ProductUrl = HttpUtility.HtmlDecode(productUrl),
-                Name = HttpUtility.HtmlDecode(title),
+                Title = HttpUtility.HtmlDecode(title),
                 Price = price,
                 Id = "No id",
                 Location = "No location",
@@ -169,6 +194,11 @@ namespace Sokvihittar.Crawlers
             };
         }
 
+        /// <summary>
+        /// Get html nodes conatinig information about products.
+        /// </summary>
+        /// <param name="node">Html node of search result page.</param>
+        /// <param name="result">List of html nodes conatinig information about products.</param>
         protected override void GetProducts(HtmlNode node, ref List<HtmlNode> result)
         {
             try
@@ -187,6 +217,9 @@ namespace Sokvihittar.Crawlers
             }
         }
 
+        /// <summary>
+        /// Encoding used on source website.
+        /// </summary>
         public override Encoding Encoding
         {
             get { return Encoding.Default; }

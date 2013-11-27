@@ -31,7 +31,7 @@ namespace Sokvihittar.Console.Test
 
                         text.Append(i).Append(Environment.NewLine);
                         text.Append("Id: ").Append(product.Id).Append(Environment.NewLine);
-                        text.Append("Name: ").Append(product.Name).Append(Environment.NewLine);
+                        text.Append("Title: ").Append(product.Title).Append(Environment.NewLine);
                         text.Append("Product url: ").Append(product.ProductUrl).Append(Environment.NewLine);
                         text.Append("Image url: ").Append(product.ImageUrl).Append(Environment.NewLine);
                         text.Append("Price: ").Append(product.Price).Append(Environment.NewLine);
