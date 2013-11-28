@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Activities.Expressions;
 using System.Diagnostics;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading;
 using System.Web.Http;
@@ -17,9 +16,9 @@ namespace Sokvihittar.Controllers
     /// </summary>
     public class SearchController : ApiController
     {
-        public string LogName
+        public string LogFileName
         {
-            get { return "Sokvihittar.Real.log"; }
+            get { return Path.Combine(Path.GetTempPath(), "Sokvihittar", "Real.log"); }
         }
 
         private object _sync = new object();
@@ -51,11 +50,11 @@ namespace Sokvihittar.Controllers
                     StatisticsHelper.WriteStatistics(new SearchRequestStatiscs
                     {
                         ExecutionTime = watch.ElapsedMilliseconds,
-                        IsTest = true,
+                        IsTest = false,
                         ProductText = text,
                         Limit = limit,
                         Time = DateTime.UtcNow
-                    }, LogName);
+                    }, LogFileName);
                 }
             });
             return response;
@@ -76,11 +75,11 @@ namespace Sokvihittar.Controllers
                     StatisticsHelper.WriteStatistics(new SearchRequestStatiscs
                     {
                         ExecutionTime = watch.ElapsedMilliseconds,
-                        IsTest = true,
+                        IsTest = false,
                         ProductText = text,
                         Limit = limit,
                         Time = DateTime.UtcNow
-                    }, LogName);
+                    }, LogFileName);
                 }
             });
             return response;
@@ -92,7 +91,7 @@ namespace Sokvihittar.Controllers
         {
             lock (_sync)
             {
-                return StatisticsHelper.ReadStatistics(LogName);
+                return StatisticsHelper.ReadStatistics(LogFileName);
             }
         }
     }

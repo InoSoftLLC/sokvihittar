@@ -1,21 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
+using Sokvihittar.Controllers;
 
-namespace Sokvihittar.Controllers
+namespace Sokvihittar
 {
     public static class StatisticsHelper
     {
         public static void WriteStatistics(SearchRequestStatiscs statistics, string logName)
         {
-            lock (logName)
+            var logDirectory = Path.GetDirectoryName(logName);
+            if (!Directory.Exists(logDirectory))
             {
-                var fileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), logName);
+                Directory.CreateDirectory(logDirectory);
+            }
                 List<SearchRequestStatiscs> statisticList;
-                if (File.Exists(fileName))
+                if (File.Exists(logName))
                 {
-                    statisticList = JsonHelper.Deserialize<List<SearchRequestStatiscs>>(fileName);
+                    statisticList = JsonHelper.Deserialize<List<SearchRequestStatiscs>>(logName);
                     if (statisticList.Count > 100)
                         statisticList = statisticList.Skip(statisticList.Count - 100).ToList();
                     statisticList.Add(statistics);
@@ -24,19 +26,12 @@ namespace Sokvihittar.Controllers
                 {
                     statisticList = new List<SearchRequestStatiscs> { statistics };
                 }
-                File.WriteAllText(fileName, JsonHelper.Serialize(statisticList));
-            }
+                File.WriteAllText(logName, JsonHelper.Serialize(statisticList));
         }
 
         public static string ReadStatistics(string logName)
         {
-            var fileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), logName);
-            List<SearchRequestStatiscs> statisticList;
-            if (File.Exists(fileName))
-            {
-                return File.ReadAllText(fileName);
-            }
-            return "no results";
+            return File.Exists(logName) ? File.ReadAllText(logName) : "no results";
         }
     }
 }

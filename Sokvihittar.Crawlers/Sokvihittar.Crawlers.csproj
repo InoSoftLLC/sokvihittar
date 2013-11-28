@@ -62,6 +62,7 @@
     <Compile Include="Common\ProductInfo.cs" />
     <Compile Include="Requests\BarnebysCrawlerRequest.cs" />
     <Compile Include="Requests\AnnonsborsenCrawlerRequest.cs" />
+    <Compile Include="Requests\UddevallatorgetCrawlerRequest.cs" />
     <Compile Include="Requests\СlassiccarsCrawlerRequest.cs" />
     <Compile Include="Requests\BlocketCrawlerRequest.cs" />
     <Compile Include="Requests\FyndtorgetCrawlerRequest.cs" />

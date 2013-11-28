@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Web.Mvc;
 using Sokvihittar.Crawlers;
@@ -9,9 +10,9 @@ namespace Sokvihittar.Controllers
 {
     public class HomeController : Controller
     {
-        public string LogName
+        public string LogFileName
         {
-            get { return "Sokvihittar.Test.log"; }
+            get { return Path.Combine(Path.GetTempPath(), "Sokvihittar", "Test.log"); }
         }
 
         private object _sync = new object();
@@ -45,7 +46,7 @@ namespace Sokvihittar.Controllers
                         ProductText = searchText,
                         Limit = limit.Value,
                         Time = DateTime.UtcNow
-                    }, LogName);
+                    }, LogFileName);
                 }
             });
             return View(searchResult);
@@ -56,7 +57,7 @@ namespace Sokvihittar.Controllers
         {
             lock (_sync)
             {
-                return StatisticsHelper.ReadStatistics(LogName);
+                return StatisticsHelper.ReadStatistics(LogFileName);
             }
         }
     }

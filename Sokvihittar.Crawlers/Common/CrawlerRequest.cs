@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Text;
 using HtmlAgilityPack;
 
@@ -115,8 +116,9 @@ namespace Sokvihittar.Crawlers.Common
                 var requestUrl = GetNonFirstRequestUrl(i);
                 if (requestUrl == null)
                     break;
-                var response = WebRequestHelper.GetResponse(requestUrl);
-                ProductInfo[] newProducts = ProccedResultPage(WebRequestHelper.GetResponseHtml(response, Encoding)).ToArray();
+                ProductInfo[] newProducts =
+                    ProccedResultPage(WebRequestHelper.GetResponseHtml(GetSearchResultPage(requestUrl), Encoding))
+                        .ToArray();
                 if (newProducts.Length == 0)
                 {
                     break;
@@ -132,6 +134,10 @@ namespace Sokvihittar.Crawlers.Common
             return products.Take(Limit).ToArray();
         }
 
+        public virtual HttpWebResponse GetSearchResultPage(string requestUrl)
+        {
+            return WebRequestHelper.GetResponse(requestUrl);
+        }
         /// <summary>
         /// Returns url to get selected rusult page.
         /// </summary>
@@ -196,13 +202,10 @@ namespace Sokvihittar.Crawlers.Common
         /// </summary>
         private void GetFirstResponse()
         {
-                _firstResponseHtml  = new HtmlDocument();
-                var firstResponse = WebRequestHelper.GetResponse(FirstRequestUrl);
-                _firstResponseUrl = firstResponse.ResponseUri.OriginalString;
-                _firstResponseHtml.LoadHtml(WebRequestHelper.GetResponseHtml(firstResponse, Encoding));
-
-
-
+            _firstResponseHtml = new HtmlDocument();
+            var firstResponse = GetSearchResultPage(FirstRequestUrl);
+            _firstResponseUrl = firstResponse.ResponseUri.OriginalString;
+            _firstResponseHtml.LoadHtml(WebRequestHelper.GetResponseHtml(firstResponse, Encoding));
         }
     }
 }
