@@ -117,8 +117,18 @@ namespace Sokvihittar.Crawlers.Requests
 
         public override HttpWebResponse GetSearchResultPage(string requestUrl)
         {
-            var cookie = new Cookie("scope", "2", "/", "www.uddevallatorget.se");
-            return WebRequestHelper.GetResponse(requestUrl, null, new Cookie[] {cookie});
+            int scope = 2;
+            if (ProductText.ToLower().Contains("uddevalla"))
+                scope = 0;
+            else
+            {
+                if (ProductText.ToLower().Contains("göteborgs"))
+                {
+                    scope = 1;
+                }
+            }
+            var cookie = new Cookie("scope", scope.ToString(), "/", "www.uddevallatorget.se");
+            return WebRequestHelper.GetResponse(requestUrl, null, new[] {cookie});
         }
     }
 }
