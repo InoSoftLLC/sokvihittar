@@ -31,6 +31,7 @@ namespace Sokvihittar.Crawlers
                 (t, l) => new FyndtorgetCrawlerRequest(t, l),
                 (t, l) => new СlassiccarsCrawlerRequest(t, l),
                 (t, l) => new UddevallatorgetCrawlerRequest(t, l),
+                (t, l) => new BooliCrawlerRequest(t, l)
             };
  
             var results = new List<CrawlerResult>();
