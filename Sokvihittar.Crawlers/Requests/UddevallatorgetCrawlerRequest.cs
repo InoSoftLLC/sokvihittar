@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -127,7 +128,7 @@ namespace Sokvihittar.Crawlers.Requests
                     scope = 1;
                 }
             }
-            var cookie = new Cookie("scope", scope.ToString(), "/", "www.uddevallatorget.se");
+            var cookie = new Cookie("scope", scope.ToString(CultureInfo.InvariantCulture), "/", "www.uddevallatorget.se");
             return WebRequestHelper.GetResponse(requestUrl, null, new[] {cookie});
         }
     }

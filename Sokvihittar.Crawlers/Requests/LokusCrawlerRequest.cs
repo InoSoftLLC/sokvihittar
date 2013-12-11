@@ -18,7 +18,7 @@ namespace Sokvihittar.Crawlers.Requests
         {
             get
             {
-                return new Dictionary<HttpRequestHeader, string>()
+                return new Dictionary<HttpRequestHeader, string>
                 {
                     {
                         HttpRequestHeader.Accept,
@@ -104,7 +104,6 @@ namespace Sokvihittar.Crawlers.Requests
             products.AddRange(ProccedResultPage(firstResponseHtmlDocument).ToArray());
             try
             {
-                var i = 2;
                 var responseHtmlDocument = firstResponseHtmlDocument;
                 while (products.Count < Limit)
                 {
@@ -120,7 +119,6 @@ namespace Sokvihittar.Crawlers.Requests
                         break;
                     }
                     products.AddRange(newProducts);
-                    i++;
                 }
             }
             catch (Exception)
@@ -152,7 +150,7 @@ namespace Sokvihittar.Crawlers.Requests
             {
                 
                 var imageNode =
-                    node.SelectSingleNode(".//div[@class='image']").Descendants("img").First();;
+                node.SelectSingleNode(".//div[@class='image']").Descendants("img").First();
                 imageUrl = imageNode.GetAttributeValue("src", "No image");
                 if (imageUrl.StartsWith("/"))
                 {

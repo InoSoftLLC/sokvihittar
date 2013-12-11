@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -115,7 +114,7 @@ namespace Sokvihittar.Crawlers.Requests
             {
                 title = title.Substring(0, title.Length - 1);
             }
-            string location = productNodes[5].InnerText.Trim().Replace("\t", "").Replace("\n", ""); ;
+            string location = productNodes[5].InnerText.Trim().Replace("\t", "").Replace("\n", "");
             var price = HttpUtility.HtmlDecode(productNodes[6].InnerText).Trim().Replace("\t", "").Replace("\n", "");
             if (price.Contains("Kampanjpris"))
             {
@@ -163,7 +162,7 @@ namespace Sokvihittar.Crawlers.Requests
                 ? "http://www.annonsborsen.se/search/searchFast.jspx?"
                 : String.Format("http://www.annonsborsen.se/search/searchFast.jspx?offset={0}", 20 * (pageNum - 1));
 
-            var resp = WebRequestHelper.GetResponse(url, null, new Cookie[] { jSessionId });
+            var resp = WebRequestHelper.GetResponse(url, null, new[] { jSessionId });
             return WebRequestHelper.GetResponseHtml(resp, Encoding);
         }
 
@@ -171,6 +170,7 @@ namespace Sokvihittar.Crawlers.Requests
         /// Get product information from search result page.
         /// </summary>
         /// <param name="htmlDoc">Html document</param>
+        /// <param name="searchResult">Search text.</param>
         /// <returns>Returns collection of models containing information about product.</returns>
         private ProductInfo[] ProccedResultPage(string searchResult)
         {
@@ -187,7 +187,6 @@ namespace Sokvihittar.Crawlers.Requests
                 }
                 catch (Exception)
                 {
-                    continue;
                 }
             }
             return result.ToArray();
