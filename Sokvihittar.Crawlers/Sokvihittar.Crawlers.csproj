@@ -63,6 +63,7 @@
     <Compile Include="Requests\BarnebysCrawlerRequest.cs" />
     <Compile Include="Requests\AnnonsborsenCrawlerRequest.cs" />
     <Compile Include="Requests\BooliCrawlerRequest.cs" />
+    <Compile Include="Requests\SubRequests\BooliSubRequest.cs" />
     <Compile Include="Requests\UddevallatorgetCrawlerRequest.cs" />
     <Compile Include="Requests\СlassiccarsCrawlerRequest.cs" />
     <Compile Include="Requests\BlocketCrawlerRequest.cs" />
@@ -78,7 +79,7 @@
     <Compile Include="Requests\Unused\PrisjaktCrawlerRequest.cs" />
     <Compile Include="Requests\TraderaCrawlerRequest.cs" />
     <Compile Include="СlassiccarsCategory.cs" />
-    <Compile Include="СlassiccarsCrawlerSubRequest.cs" />
+    <Compile Include="Requests\SubRequests\СlassiccarsCrawlerSubRequest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

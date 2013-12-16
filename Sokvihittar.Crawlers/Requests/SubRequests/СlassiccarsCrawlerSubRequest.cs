@@ -6,7 +6,7 @@ using System.Web;
 using HtmlAgilityPack;
 using Sokvihittar.Crawlers.Common;
 
-namespace Sokvihittar.Crawlers
+namespace Sokvihittar.Crawlers.Requests.SubRequests
 {
     class СlassiccarsCrawlerSubRequest : CrawlerRequest
     {

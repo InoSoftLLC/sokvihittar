@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Sokvihittar.Crawlers.Common;
+using Sokvihittar.Crawlers.Requests.SubRequests;
 
 namespace Sokvihittar.Crawlers.Requests
 {
