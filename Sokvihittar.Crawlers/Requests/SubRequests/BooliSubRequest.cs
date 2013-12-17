@@ -111,14 +111,16 @@ namespace Sokvihittar.Crawlers.Requests.SubRequests
             var productId = node.Id.Replace("id_", "");
             var nodes = node.SelectNodes(".//td");
             string imageUrl;
+            
             try
             {
-                var imageNode = nodes[0].SelectSingleNode(".//div[@class='thumbBorder']").SelectSingleNode(".//a/img");
-                imageUrl = imageNode.GetAttributeValue("src", "No image");
-                if (imageUrl.StartsWith("/"))
-                {
-                    imageUrl = String.Format("http://www.booli.se{0}", imageUrl);
-                }
+                var metaNode = nodes[0].SelectSingleNode(".//script");
+                var metaString = metaNode.InnerText;
+                metaString = metaString.Substring(metaString.IndexOf("primaryImage") + 14);
+                metaString = metaString.Substring(0, metaString.IndexOf("\"")-1);
+                imageUrl = metaString.ToLower() == "false"
+                    ? String.Format("http://i.bcdn.se/cache/primary_{0}_650x450.jpg", productId)
+                    : String.Format("http://i.bcdn.se/cache/{0}_650x450.jpg", metaString);
             }
             catch (Exception)
             {
@@ -148,7 +150,7 @@ namespace Sokvihittar.Crawlers.Requests.SubRequests
             var location = area == "" ? title : String.Format("{0}, {1}", title, area);
             return new ProductInfo
             {
-                ImageUrl = "No image",
+                ImageUrl = imageUrl,
                 Date = "No date",
                 ProductUrl = HttpUtility.HtmlDecode(productUrl),
                 Title = HttpUtility.HtmlDecode(title),
