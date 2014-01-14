@@ -51,14 +51,5 @@ namespace Sokvihittar.Controllers
             });
             return View(searchResult);
         }
-
-        [HttpGet]
-        public string Statistics()
-        {
-            lock (_sync)
-            {
-                return StatisticsHelper.ReadStatistics(LogFileName);
-            }
-        }
     }
 }

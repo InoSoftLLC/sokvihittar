@@ -136,6 +136,7 @@
     <Compile Include="Common\CrawlerResult.cs" />
     <Compile Include="Common\ICrawlerRequest.cs" />
     <Compile Include="Crawler.cs" />
+    <Compile Include="CrawlerSource.cs" />
     <Compile Include="EncodingHelper.cs" />
     <Compile Include="PrisjaktResponse.cs" />
     <Compile Include="Requests\AllaannonserCrawlerRequest.cs" />

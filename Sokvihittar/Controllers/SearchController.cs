@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
@@ -32,8 +33,6 @@ namespace Sokvihittar.Controllers
         [HttpGet]
         public HttpResponseMessage Index(string text, int limit, string callBack)
         {
-            var watch = new Stopwatch();
-            watch.Start();
             callBack = callBack.Replace("?", "");
             var response = new HttpResponseMessage();
             var content = new StringBuilder();
@@ -42,21 +41,49 @@ namespace Sokvihittar.Controllers
             content.Append(result).Append(")");
             response.Content = new StringContent(content.ToString(), new UTF8Encoding());
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/javascript") {CharSet = "utf-8"};
-            watch.Stop();
-            ThreadPool.QueueUserWorkItem(_ =>
+            return response;
+        }
+
+
+        /// <summary>
+        /// Searches for items.
+        /// </summary>
+        /// <param name="text">Search text.</param>
+        /// <param name="limit">Product limit count.</param>
+        /// <param name="sources">crawlerSources</param>
+        /// <returns>Returns an array of crawler crawlerResults.</returns>
+        [HttpGet]
+        public HttpResponseMessage Index(string text, int limit, string sources,string callBack)
+        {
+            callBack = callBack.Replace("?", "");
+            var response = new HttpResponseMessage();
+            var content = new StringBuilder();
+            
+            var sourceList = new List<CrawlerSource>();
+            foreach (var item in sources.Split(','))
             {
-                lock (_sync)
+                int sourceId;
+                var flag = Int32.TryParse(item, out sourceId);
+                if (!flag)
                 {
-                    StatisticsHelper.WriteStatistics(new SearchRequestStatiscs
-                    {
-                        ExecutionTime = watch.ElapsedMilliseconds,
-                        IsTest = false,
-                        ProductText = text,
-                        Limit = limit,
-                        Time = DateTime.UtcNow
-                    }, LogFileName);
+                    response.Content = new StringContent(String.Format("Invalid crawler source: \"{0}\"", item), new UTF8Encoding());
+                    return response;
                 }
-            });
+                var source = (CrawlerSource) sourceId;
+                if (!Enum.IsDefined(typeof (CrawlerSource), source))
+                {
+                    response.Content = new StringContent(String.Format("Invalid crawler source: \"{0}\"", item),
+                        new UTF8Encoding());
+                    return response;
+                }
+                sourceList.Add(source);
+
+            }
+            content.Append(callBack).Append(" && ").Append(callBack).Append("(");
+            var result = JsonHelper.Serialize(Crawler.Search(text, limit, sourceList.ToArray()));
+            content.Append(result).Append(")");
+            response.Content = new StringContent(content.ToString(), new UTF8Encoding());
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/javascript") {CharSet = "utf-8"};
             return response;
 
         }
@@ -64,24 +91,7 @@ namespace Sokvihittar.Controllers
         [HttpGet]
         public CrawlerResult[] Index(string text, int limit)
         {
-            var watch = new Stopwatch();
-            watch.Start();
             var response = Crawler.Search(text, limit);
-            watch.Stop();
-            ThreadPool.QueueUserWorkItem(_ =>
-            {
-                lock (_sync)
-                {
-                    StatisticsHelper.WriteStatistics(new SearchRequestStatiscs
-                    {
-                        ExecutionTime = watch.ElapsedMilliseconds,
-                        IsTest = false,
-                        ProductText = text,
-                        Limit = limit,
-                        Time = DateTime.UtcNow
-                    }, LogFileName);
-                }
-            });
             return response;
         }
 
