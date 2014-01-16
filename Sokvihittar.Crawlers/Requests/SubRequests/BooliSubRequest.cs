@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using HtmlAgilityPack;
+using Microsoft.Ajax.Utilities;
 using Sokvihittar.Crawlers.Common;
 
 namespace Sokvihittar.Crawlers.Requests.SubRequests
@@ -109,15 +110,18 @@ namespace Sokvihittar.Crawlers.Requests.SubRequests
         protected override ProductInfo GetProductInfoFromNode(HtmlNode node)
         {
             var productId = node.Id.Replace("id_", "");
-            var nodes = node.SelectNodes(".//td");
+            //var nodes = node.SelectNodes(".//td");
             string imageUrl;
-            
+
             try
             {
-                var metaNode = nodes[0].SelectSingleNode(".//script");
-                var metaString = metaNode.InnerText;
+                var metaString = node.GetAttributeValue("data-meta", "no metadata");
+                if (metaString == "no metadata")
+                {
+                    throw new Exception("No metadata");
+                }
                 metaString = metaString.Substring(metaString.IndexOf("primaryImage") + 14);
-                metaString = metaString.Substring(0, metaString.IndexOf("\"")-1);
+                metaString = metaString.Substring(0, metaString.IndexOf("\"") - 1);
                 imageUrl = metaString.ToLower() == "false"
                     ? String.Format("http://i.bcdn.se/cache/primary_{0}_650x450.jpg", productId)
                     : String.Format("http://i.bcdn.se/cache/{0}_650x450.jpg", metaString);
@@ -126,27 +130,28 @@ namespace Sokvihittar.Crawlers.Requests.SubRequests
             {
                 imageUrl = "No image";
             }
-            var adressNode = nodes[1].SelectSingleNode(".//div[@class='addressCell']");
-            var title = adressNode.SelectSingleNode(".//meta[@itemprop='streetAddress']").GetAttributeValue("content", "No title");
-            if (title == "No title")
-                throw new Exception("Invalid node data");
-
-            var propertyType =
-                HttpUtility.HtmlDecode(nodes[1].SelectSingleNode(".//p[@class='areaCell']").InnerText.Split('-')[0])
-                    .Trim();
-
-            var area = adressNode.SelectSingleNode(".//meta[@itemprop='addressLocality']").GetAttributeValue("content", "No title");
-            area = HttpUtility.HtmlDecode(area).Trim().Replace("\t", "").Replace("\n", "");
-            var productUrl = adressNode.SelectSingleNode(".//a").GetAttributeValue("href", "No url");
+            var infoNode = node.SelectSingleNode(".//div[@class='desktop']");
+            var adressNode = infoNode.SelectSingleNode(".//ul[@class='postAddressCol']");
+            var titleNode =adressNode.SelectSingleNode(".//li[@class='addressCell']").SelectSingleNode(".//a");
+            var title = HttpUtility.HtmlDecode(titleNode.InnerText).Trim().Replace("\t", "").Replace("\n", "");
+            var productUrl = titleNode.GetAttributeValue("href", "No url");
             if (productUrl == "No url")
                 throw new Exception("Invalid node data");
             if (productUrl.StartsWith("/"))
             {
                 productUrl = String.Format("http://www.booli.se{0}", productUrl);
             }
-            var price =  HttpUtility.HtmlDecode(nodes[2].SelectSingleNode(".//div").InnerText).Trim().Replace("\t", "").Replace("\n", "");
-            if (price =="")
-                throw new Exception("Invalid node data");
+            var propertyType =
+                HttpUtility.HtmlDecode(
+                    adressNode.SelectSingleNode(".//li[@class='areaCell light']").InnerText).Split('–')[0]
+                    .Trim();
+            var priceNode = infoNode.SelectSingleNode(".//ul[@class='priceCol']").ChildNodes.First();
+            var price = HttpUtility.HtmlDecode(priceNode.InnerText).Trim().Replace("\t", "").Replace("\n", "");
+            if (price == "")
+            throw new Exception("Invalid node data");
+            var area = HttpUtility.HtmlDecode(
+                    adressNode.SelectSingleNode(".//li[@class='areaCell light']").InnerText).Split('–')[1];
+            area = HttpUtility.HtmlDecode(area).Trim().Replace("\t", "").Replace("\n", "");
             var location = area == "" ? title : String.Format("{0}, {1}", title, area);
             return new ProductInfo
             {
