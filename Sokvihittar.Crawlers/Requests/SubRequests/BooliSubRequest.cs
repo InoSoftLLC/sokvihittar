@@ -9,11 +9,12 @@ using Sokvihittar.Crawlers.Common;
 
 namespace Sokvihittar.Crawlers.Requests.SubRequests
 {
-    class BooliSubRequest : CrawlerRequest
+    class BooliSubRequest : CrawlerSubRequest
     {
         private readonly string _firstRequestUrl;
 
-        public BooliSubRequest(string productText, int limit, List<string> propertyTypes) : base(productText, limit)
+        public BooliSubRequest(string productText, int limit, List<string> propertyTypes, bool stictResults, string fullSerchText)
+            : base(productText, limit,stictResults, fullSerchText)
         {
             var url = new StringBuilder();
             url.Append("http://www.booli.se/");

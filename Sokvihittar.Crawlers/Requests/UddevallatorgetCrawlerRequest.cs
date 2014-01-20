@@ -12,7 +12,8 @@ namespace Sokvihittar.Crawlers.Requests
 {
     class UddevallatorgetCrawlerRequest : CrawlerRequest
     {
-        public UddevallatorgetCrawlerRequest(string productText, int limit) : base(productText, limit)
+        public UddevallatorgetCrawlerRequest(string productText, int limit, bool isStrictResults)
+            : base(productText, limit, isStrictResults)
         {
         }
 

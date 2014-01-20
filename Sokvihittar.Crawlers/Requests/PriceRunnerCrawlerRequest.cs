@@ -20,7 +20,8 @@ namespace Sokvihittar.Crawlers.Requests
         /// </summary>
         private bool _categorizedDesign;
 
-        public PriceRunnerCrawlerRequest(string productText, int limit) : base(productText, limit)
+        public PriceRunnerCrawlerRequest(string productText, int limit, bool isStrictResults)
+            : base(productText, limit, isStrictResults)
         {
         }
 
@@ -181,7 +182,7 @@ namespace Sokvihittar.Crawlers.Requests
                         date = "No date";
                     }
 
-                    result.Add(new ProductInfo
+                    var info = new ProductInfo
                     {
                         ImageUrl = HttpUtility.HtmlDecode(imageUrl),
                         Date = date,
@@ -191,7 +192,12 @@ namespace Sokvihittar.Crawlers.Requests
                         Id = productId,
                         Location = "No location",
                         Domain = "www.pricerunner.se"
-                    });
+                    };
+                    if (IsStrictResults && !info.IsStrict(ProductText))
+                    {
+                        continue;
+                    }
+                    result.Add(info);
                 }
                 catch (Exception ex)
                 {

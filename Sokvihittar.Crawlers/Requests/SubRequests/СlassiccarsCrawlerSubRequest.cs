@@ -8,14 +8,14 @@ using Sokvihittar.Crawlers.Common;
 
 namespace Sokvihittar.Crawlers.Requests.SubRequests
 {
-    class СlassiccarsCrawlerSubRequest : CrawlerRequest
+    class СlassiccarsCrawlerSubRequest : CrawlerSubRequest
     {
         /// <summary>
         /// Catego
         /// </summary>
         private readonly string _category;
 
-        public СlassiccarsCrawlerSubRequest(string productText, int limit, string category) : base(productText, limit)
+        public СlassiccarsCrawlerSubRequest(string productText, int limit, string category, bool isStrictResults, string fullSerchText) : base(productText, limit,isStrictResults ,fullSerchText)
         {
             _category = category;
         }
@@ -224,5 +224,6 @@ namespace Sokvihittar.Crawlers.Requests.SubRequests
         {
             get { return Encoding.Default; }
         }
+
     }
 }

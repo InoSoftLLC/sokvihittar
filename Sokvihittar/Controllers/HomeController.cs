@@ -1,7 +1,5 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using System.Web.Mvc;
 using Sokvihittar.Crawlers;
 using Sokvihittar.Crawlers.Common;
@@ -31,24 +29,39 @@ namespace Sokvihittar.Controllers
             ViewBag.SearchText = searchText;
             ViewBag.Limit = limit;
 
-            var watch = new Stopwatch();
-            watch.Start();
-            var searchResult = Crawler.Search(searchText, limit.Value);
-            watch.Stop();
-            ThreadPool.QueueUserWorkItem(_ =>
+            var sources = new List<CrawlerSource>()
             {
-                lock (_sync)
-                {
-                    StatisticsHelper.WriteStatistics(new SearchRequestStatiscs
-                    {
-                        ExecutionTime = watch.ElapsedMilliseconds,
-                        IsTest = true,
-                        ProductText = searchText,
-                        Limit = limit.Value,
-                        Time = DateTime.UtcNow
-                    }, LogFileName);
-                }
-            });
+                CrawlerSource.Allaannonser,
+                CrawlerSource.Annonsborsen,
+                CrawlerSource.Barnebys,
+                CrawlerSource.Blocket,
+                CrawlerSource.Booli,
+                CrawlerSource.Classiccars,
+                CrawlerSource.Fyndtorget,
+                CrawlerSource.Lokus,
+                CrawlerSource.Mascus,
+                CrawlerSource.Pricerunner,
+                CrawlerSource.Tradera,
+                CrawlerSource.Uddevallatorget
+            }.ToArray();
+
+            var strict = new List<CrawlerSource>()
+            {
+                CrawlerSource.Allaannonser,
+                CrawlerSource.Annonsborsen,
+                CrawlerSource.Barnebys,
+                CrawlerSource.Blocket,
+                CrawlerSource.Booli,
+                CrawlerSource.Classiccars,
+                CrawlerSource.Fyndtorget,
+                CrawlerSource.Lokus,
+                CrawlerSource.Mascus,
+                CrawlerSource.Pricerunner,
+                CrawlerSource.Tradera,
+                CrawlerSource.Uddevallatorget
+            }.ToArray();
+
+            var searchResult = Crawler.Search(searchText, limit.Value, sources, strict);
             return View(searchResult);
         }
     }

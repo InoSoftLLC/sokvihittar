@@ -30,7 +30,8 @@ namespace Sokvihittar.Crawlers.Requests
             }
         }
 
-        public LokusCrawlerRequest(string productText, int limit) : base(productText, limit)
+        public LokusCrawlerRequest(string productText, int limit, bool isStrictResults)
+            : base(productText, limit, isStrictResults)
         {
         }
 

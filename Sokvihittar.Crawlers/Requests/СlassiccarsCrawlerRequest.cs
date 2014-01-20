@@ -9,10 +9,11 @@ namespace Sokvihittar.Crawlers.Requests
 {
     class СlassiccarsCrawlerRequest : ICrawlerRequest
     {
-        public СlassiccarsCrawlerRequest(string productText, int limit)
+        public СlassiccarsCrawlerRequest(string productText, int limit, bool stricResults)
         {
             ProductText = productText;
             Limit = limit;
+            IsStrictResults = stricResults;
         }
 
         /// <summary>
@@ -73,6 +74,8 @@ namespace Sokvihittar.Crawlers.Requests
         /// </summary>
         public Encoding Encoding { get { return Encoding.UTF8; } }
 
+        public bool IsStrictResults { get; private set; }
+
         /// <summary>
         /// Creates subrequest for each category. executes them, returns results.
         /// </summary>
@@ -80,7 +83,7 @@ namespace Sokvihittar.Crawlers.Requests
         public ProductInfo[] ExecuteSearchRequest()
         {
             var subRequests =
-                Categories.Values.Select(category => new СlassiccarsCrawlerSubRequest(ProductText, Limit, category))
+                Categories.Values.Select(category => new СlassiccarsCrawlerSubRequest(ProductText, Limit, category, IsStrictResults, ProductText))
                     .ToList();
             var result = new List<ProductInfo>();
             Parallel.ForEach(subRequests, subRequest => result.AddRange(subRequest.ExecuteSearchRequest()));

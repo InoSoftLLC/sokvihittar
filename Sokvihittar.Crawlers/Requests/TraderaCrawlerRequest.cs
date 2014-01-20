@@ -10,7 +10,7 @@ namespace Sokvihittar.Crawlers.Requests
 {
     class TraderaCrawlerRequest : CrawlerRequest
     {
-        public TraderaCrawlerRequest(string productText, int limit) : base(productText, limit)
+        public TraderaCrawlerRequest(string productText, int limit, bool isStrictResults) : base(productText, limit, isStrictResults)
         {
         }
 

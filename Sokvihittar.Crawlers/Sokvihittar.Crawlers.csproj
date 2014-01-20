@@ -132,6 +132,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\CrawlerSubRequest.cs" />
+    <Compile Include="Common\ProductInfoExtensions.cs" />
     <Compile Include="Common\SearchResultStatus.cs" />
     <Compile Include="Common\CrawlerResult.cs" />
     <Compile Include="Common\ICrawlerRequest.cs" />
@@ -151,14 +153,10 @@
     <Compile Include="Requests\BlocketCrawlerRequest.cs" />
     <Compile Include="Requests\FyndtorgetCrawlerRequest.cs" />
     <Compile Include="Requests\LokusCrawlerRequest.cs" />
-    <Compile Include="Requests\Unused\FyndiqCrawlerRequest.cs" />
-    <Compile Include="Requests\Unused\GulansCrawlerRequest.cs" />
-    <Compile Include="Requests\Unused\KvdCrawlerRequest.cs" />
     <Compile Include="Requests\MascusCrawlerRequest.cs" />
     <Compile Include="Requests\PriceRunnerCrawlerRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\WebRequestHelper.cs" />
-    <Compile Include="Requests\Unused\PrisjaktCrawlerRequest.cs" />
     <Compile Include="Requests\TraderaCrawlerRequest.cs" />
     <Compile Include="СlassiccarsCategory.cs" />
     <Compile Include="Requests\SubRequests\СlassiccarsCrawlerSubRequest.cs" />

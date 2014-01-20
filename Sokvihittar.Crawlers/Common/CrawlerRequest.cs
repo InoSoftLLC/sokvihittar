@@ -28,10 +28,12 @@ namespace Sokvihittar.Crawlers.Common
         /// </summary>
         /// <param name="productText">Search text.</param>
         /// <param name="limit">Needed product count.</param>
-        protected CrawlerRequest(string productText, int limit)
+        /// <param name="isStrictResults"></param>
+        protected CrawlerRequest(string productText, int limit, bool isStrictResults)
         {
             ProductText = productText;
             Limit = limit;
+            IsStrictResults = isStrictResults;
         }
         
         /// <summary>
@@ -48,6 +50,8 @@ namespace Sokvihittar.Crawlers.Common
         /// Encoding used on source website.
         /// </summary>
         public abstract Encoding Encoding { get; }
+
+        public bool IsStrictResults { get; private set; }
 
         /// <summary>
         /// Html document containing html text of first result page response.
@@ -176,7 +180,7 @@ namespace Sokvihittar.Crawlers.Common
         /// </summary>
         /// <param name="htmlDoc">Html document</param>
         /// <returns>Returns collection of models containing information about product.</returns>
-        protected IEnumerable<ProductInfo> ProccedResultPage(HtmlDocument htmlDoc)
+        protected virtual IEnumerable<ProductInfo> ProccedResultPage(HtmlDocument htmlDoc)
         {
             var productNodes = new List<HtmlNode>();
             GetProducts(htmlDoc.DocumentNode, ref productNodes);
@@ -185,12 +189,15 @@ namespace Sokvihittar.Crawlers.Common
             {
                 try
                 {
-                    result.Add(GetProductInfoFromNode(productNode));
+                    var info = GetProductInfoFromNode(productNode);
+                    if (IsStrictResults && !info.IsStrict(ProductText))
+                    {
+                        continue;
+                    } 
+                    result.Add(info);
                 }
                 catch (Exception)
                 {
-                    var a= SourceName;
-                    continue;
                 }
             }
             return result;

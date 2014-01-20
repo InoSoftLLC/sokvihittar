@@ -34,6 +34,8 @@ namespace Sokvihittar.Crawlers.Common
         /// </summary>
         Encoding Encoding { get; }
 
+        bool IsStrictResults { get; }
+
         /// <summary>
         /// Executes search request, forms and returns product information models.
         /// </summary>

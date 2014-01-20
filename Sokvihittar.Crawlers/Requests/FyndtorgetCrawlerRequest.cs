@@ -10,7 +10,8 @@ namespace Sokvihittar.Crawlers.Requests
 {
     class FyndtorgetCrawlerRequest : CrawlerRequest
     {
-        public FyndtorgetCrawlerRequest(string productText, int limit) : base(productText, limit)
+        public FyndtorgetCrawlerRequest(string productText, int limit, bool isStrictResults)
+            : base(productText, limit, isStrictResults)
         {
         }
 

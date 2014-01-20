@@ -10,11 +10,11 @@ namespace Sokvihittar.Crawlers.Requests
 {
     class BooliCrawlerRequest : ICrawlerRequest
     {
-        public BooliCrawlerRequest(string productText, int limit)
+        public BooliCrawlerRequest(string productText, int limit, bool isStrictResults)
         {
             Limit = limit;
             ProductText = productText;
-
+            IsStrictResults = isStrictResults;
             PropertyTypes = new Dictionary<string, string>
             {
                 {"lägenheter","lagenhet"},
@@ -44,6 +44,8 @@ namespace Sokvihittar.Crawlers.Requests
         {
             get { return Encoding.UTF8; }
         }
+
+        public bool IsStrictResults { get; private set; }
 
         public int Id
         {
@@ -77,7 +79,7 @@ namespace Sokvihittar.Crawlers.Requests
                 }
             }
 
-            var subRequests = searchWords.Select(searchWord => new BooliSubRequest(searchWord, Limit, types));
+            var subRequests = searchWords.Select(searchWord => new BooliSubRequest(searchWord, Limit, types, IsStrictResults, ProductText));
             var results = new List<ProductInfo>();
             Parallel.ForEach(subRequests, subRequest =>
             {

@@ -11,10 +11,11 @@ namespace Sokvihittar.Crawlers.Requests
 {
     class AnnonsborsenCrawlerRequest : ICrawlerRequest
     {
-        public AnnonsborsenCrawlerRequest(string productText,int limit )
+        public AnnonsborsenCrawlerRequest(string productText, int limit, bool isStrictResults)
         {
             ProductText = productText;
             Limit = limit;
+            IsStrictResults = isStrictResults;
         }
 
         /// <summary>
@@ -34,6 +35,8 @@ namespace Sokvihittar.Crawlers.Requests
         {
             get { return Encoding.GetEncoding(EncodingHelper.CodePages["iso-8859-1"]); }
         }
+
+        public bool IsStrictResults { get; private set; }
 
         /// <summary>
         /// Needed product count.
@@ -183,7 +186,12 @@ namespace Sokvihittar.Crawlers.Requests
             {
                 try
                 {
-                    result.Add(GetProductInfoFromNode(productNode));
+                    var info = GetProductInfoFromNode(productNode);
+                    if (IsStrictResults &&!info.IsStrict(ProductText))
+                    {
+                        continue;
+                    }
+                    result.Add(info);
                 }
                 catch (Exception)
                 {

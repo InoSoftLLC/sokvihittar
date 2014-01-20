@@ -10,7 +10,8 @@ namespace Sokvihittar.Crawlers.Requests
 {
     public class MascusCrawlerRequest : CrawlerRequest
     {
-        public MascusCrawlerRequest(string productText, int limit) : base(productText, limit)
+        public MascusCrawlerRequest(string productText, int limit, bool isStrictResults)
+            : base(productText, limit, isStrictResults)
         {
         }
 

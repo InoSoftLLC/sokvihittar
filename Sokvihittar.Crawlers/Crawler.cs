@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using com.sun.org.apache.regexp.@internal;
 using Sokvihittar.Crawlers.Common;
 using Sokvihittar.Crawlers.Requests;
 
@@ -18,16 +17,18 @@ namespace Sokvihittar.Crawlers
         /// <param name="limit">Limit of products per site.</param>
         /// <param name="sources">Array of crawler sources.</param>
         /// <returns></returns>
-        public static CrawlerResult[] Search(string text, int limit, CrawlerSource[] sources = null)
+        public static CrawlerResult[] Search(string text, int limit, CrawlerSource[] sources = null, CrawlerSource[] strictSearchSources = null)
         {
             CrawlerSource[] crawlerSources = sources ?? DefaultCrawlerSources;
-            var crawlerRequests = crawlerSources.ToDictionary(crawlerSource => crawlerSource, crawlerSource => _crawlerRequests[crawlerSource]);
-            var results = new Dictionary<CrawlerSource,CrawlerResult>();
+            var crawlerRequests = crawlerSources.ToDictionary(crawlerSource => crawlerSource,
+                crawlerSource => CrawlerRequests[crawlerSource]);
+            var results = new Dictionary<CrawlerSource, CrawlerResult>();
             Parallel.ForEach(crawlerRequests, request =>
             {
                 var watch = new Stopwatch();
                 watch.Start();
-                var crawlerRequest = request.Value(text, limit);
+                bool isStrictSearch = strictSearchSources != null && strictSearchSources.Contains(request.Key);
+                var crawlerRequest = request.Value(text, limit, isStrictSearch);
                 CrawlerResult result = null;
                 try
                 {
@@ -59,7 +60,7 @@ namespace Sokvihittar.Crawlers
                     {
                         watch.Stop();
                         result.ExecutionTime = watch.ElapsedMilliseconds;
-                        results.Add(request.Key,result);
+                        results.Add(request.Key, result);
                     }
                 }
             });
@@ -68,66 +69,66 @@ namespace Sokvihittar.Crawlers
             return crawlerResults.ToArray();
         }
 
-        private static Dictionary<CrawlerSource, Func<string, int, ICrawlerRequest>> _crawlerRequests
+        private static Dictionary<CrawlerSource, Func<string, int, bool, ICrawlerRequest>> CrawlerRequests
         {
-           get
+            get
             {
-                return new Dictionary<CrawlerSource, Func<string, int, ICrawlerRequest>>
+                return new Dictionary<CrawlerSource, Func<string, int, bool, ICrawlerRequest>>
                 {
-                    //Add crawlers here.
                     {
                         CrawlerSource.Allaannonser,
-                        (t, l) => new AllaannonserCrawlerRequest(t, l)
+                        (t, l, s) => new AllaannonserCrawlerRequest(t, l, s)
                     },
                     {
                         CrawlerSource.Pricerunner,
-                        (t, l) => new PriceRunnerCrawlerRequest(t, l)
+                        (t, l, s) => new PriceRunnerCrawlerRequest(t, l, s)
                     },
                     {
                         CrawlerSource.Mascus,
-                        (t, l) => new MascusCrawlerRequest(t, l)
+                        (t, l, s) => new MascusCrawlerRequest(t, l, s)
                     },
                     {
                         CrawlerSource.Tradera,
-                        (t, l) => new TraderaCrawlerRequest(t, l)
+                        (t, l, s) => new TraderaCrawlerRequest(t, l, s)
                     },
                     {
                         CrawlerSource.Blocket,
-                        (t, l) => new BlocketCrawlerRequest(t, l)
+                        (t, l, s) => new BlocketCrawlerRequest(t, l, s)
                     },
                     {
                         CrawlerSource.Barnebys,
-                        (t, l) => new BarnebysCrawlerRequest(t, l)
+                        (t, l, s) => new BarnebysCrawlerRequest(t, l, s)
                     },
                     {
                         CrawlerSource.Annonsborsen,
-                        (t, l) => new AnnonsborsenCrawlerRequest(t, l)
+                        (t, l, s) => new AnnonsborsenCrawlerRequest(t, l, s)
                     },
                     {
                         CrawlerSource.Lokus,
-                        (t, l) => new LokusCrawlerRequest(t, l)
+                        (t, l, s) => new LokusCrawlerRequest(t, l, s)
                     },
                     {
                         CrawlerSource.Fyndtorget,
-                        (t, l) => new FyndtorgetCrawlerRequest(t, l)
+                        (t, l, s) => new FyndtorgetCrawlerRequest(t, l, s)
                     },
                     {
                         CrawlerSource.Classiccars,
-                        (t, l) => new СlassiccarsCrawlerRequest(t, l)
+                        (t, l, s) => new СlassiccarsCrawlerRequest(t, l, s)
                     },
                     {
                         CrawlerSource.Uddevallatorget,
-                        (t, l) => new UddevallatorgetCrawlerRequest(t, l)
+                        (t, l, s) => new UddevallatorgetCrawlerRequest(t, l, s)
                     },
                     {
                         CrawlerSource.Booli,
-                        (t, l) => new BooliCrawlerRequest(t, l)
+                        (t, l, s) => new BooliCrawlerRequest(t, l, s)
                     },
                 };
             }
         }
 
-        private static CrawlerSource[] DefaultCrawlerSources {
+        private static CrawlerSource[] DefaultCrawlerSources
+        {
             get
             {
                 return new[]
@@ -147,6 +148,5 @@ namespace Sokvihittar.Crawlers
                 };
             }
         }
-
     }
 }

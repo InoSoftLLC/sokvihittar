@@ -418,5 +418,14 @@
             <param name="sources">crawlerSources</param>
             <returns>Returns an array of crawler crawlerResults.</returns>
         </member>
+        <member name="M:Sokvihittar.Controllers.SearchController.Index(System.String,System.Int32,System.String,System.String,System.String)">
+            <summary>
+            Searches for items.
+            </summary>
+            <param name="text">Search text.</param>
+            <param name="limit">Product limit count.</param>
+            <param name="sources">crawlerSources</param>
+            <returns>Returns an array of crawler crawlerResults.</returns>
+        </member>
     </members>
 </doc>

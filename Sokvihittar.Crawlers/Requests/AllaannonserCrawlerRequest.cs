@@ -16,7 +16,8 @@ namespace Sokvihittar.Crawlers.Requests
         /// </summary>
         /// <param name="productText">Search text.</param>
         /// <param name="limit">Needed product count.</param>
-        public AllaannonserCrawlerRequest(string productText, int limit) : base(productText, limit)
+        public AllaannonserCrawlerRequest(string productText, int limit, bool isStrictResults)
+            : base(productText, limit, isStrictResults)
         {
         }
         

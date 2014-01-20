@@ -10,7 +10,8 @@ namespace Sokvihittar.Crawlers.Requests
 {
     class BlocketCrawlerRequest : CrawlerRequest
     {
-        public BlocketCrawlerRequest(string productText, int limit) : base(productText, limit)
+        public BlocketCrawlerRequest(string productText, int limit, bool isStrictResults)
+            : base(productText, limit, isStrictResults)
         {
         }
 

@@ -10,7 +10,7 @@ namespace Sokvihittar.Crawlers.Requests
 {
     class BarnebysCrawlerRequest : CrawlerRequest
     {
-        public BarnebysCrawlerRequest(string productText, int limit) : base(productText, limit)
+        public BarnebysCrawlerRequest(string productText, int limit, bool isStrictResults) : base(productText, limit, isStrictResults)
         {
         }
 
