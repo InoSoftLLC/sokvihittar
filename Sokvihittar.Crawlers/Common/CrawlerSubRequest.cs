@@ -6,7 +6,8 @@ namespace Sokvihittar.Crawlers.Common
 {
     public abstract class CrawlerSubRequest : CrawlerRequest
     {
-        protected CrawlerSubRequest(string productText, int limit, bool isStrictResults,  string fullSerchText) : base(productText, limit, isStrictResults)
+        protected CrawlerSubRequest(string productText, int limit, bool isStrictResults, string fullSerchText)
+            : base(productText, limit, isStrictResults)
         {
             FullSerchText = fullSerchText;
         }
@@ -23,7 +24,11 @@ namespace Sokvihittar.Crawlers.Common
                 try
                 {
                     var info = GetProductInfoFromNode(productNode);
-                    if (info.IsStrict(FullSerchText))
+                    if (IsStrictResults)
+                    {
+                        if (info.IsStrict(FullSerchText))
+                            result.Add(info);
+                    }
                     result.Add(info);
                 }
                 catch (Exception)

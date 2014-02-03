@@ -8,7 +8,7 @@ using Sokvihittar.Crawlers.Requests.SubRequests;
 
 namespace Sokvihittar.Crawlers.Requests
 {
-    class BooliCrawlerRequest : ICrawlerRequest
+    internal class BooliCrawlerRequest : ICrawlerRequest
     {
         public BooliCrawlerRequest(string productText, int limit, bool isStrictResults)
         {
@@ -51,6 +51,7 @@ namespace Sokvihittar.Crawlers.Requests
         {
             get { return 12; }
         }
+
         public string SourceName
         {
             get { return "Booli"; }
@@ -64,7 +65,6 @@ namespace Sokvihittar.Crawlers.Requests
 
         public ProductInfo[] ExecuteSearchRequest()
         {
-
             var searchWords = new List<string>();
             var types = new List<string>();
             foreach (var word in ProductText.ToLower().Split(' '))
@@ -79,7 +79,7 @@ namespace Sokvihittar.Crawlers.Requests
                 }
             }
 
-            var subRequests = searchWords.Select(searchWord => new BooliSubRequest(searchWord, Limit, types, IsStrictResults, ProductText));
+            var subRequests = searchWords.Select(searchWord => new BooliSubRequest(searchWord, Limit, types, false, ProductText));
             var results = new List<ProductInfo>();
             Parallel.ForEach(subRequests, subRequest =>
             {
@@ -94,8 +94,6 @@ namespace Sokvihittar.Crawlers.Requests
                 catch (Exception)
                 {
                 }
-                
-                
             });
             return results.Take(Limit).ToArray();
         }

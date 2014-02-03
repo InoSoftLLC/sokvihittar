@@ -9,12 +9,12 @@ using Sokvihittar.Crawlers.Common;
 
 namespace Sokvihittar.Crawlers.Requests.SubRequests
 {
-    class BooliSubRequest : CrawlerSubRequest
+    internal class BooliSubRequest : CrawlerSubRequest
     {
         private readonly string _firstRequestUrl;
 
         public BooliSubRequest(string productText, int limit, List<string> propertyTypes, bool stictResults, string fullSerchText)
-            : base(productText, limit,stictResults, fullSerchText)
+            : base(productText, limit, stictResults, fullSerchText)
         {
             var url = new StringBuilder();
             url.Append("http://www.booli.se/");
@@ -25,7 +25,7 @@ namespace Sokvihittar.Crawlers.Requests.SubRequests
             url.Append(productText);
             _firstRequestUrl = url.ToString();
         }
-        
+
         public override string Domain
         {
             get { return "www.booli.se"; }
@@ -40,6 +40,7 @@ namespace Sokvihittar.Crawlers.Requests.SubRequests
         {
             get { return 12; }
         }
+
         public override string SourceName
         {
             get { return "Booli"; }
@@ -47,10 +48,8 @@ namespace Sokvihittar.Crawlers.Requests.SubRequests
 
         protected override string FirstRequestUrl
         {
-            
             get { return _firstRequestUrl; }
         }
-
 
         public override ProductInfo[] ExecuteSearchRequest()
         {
@@ -60,7 +59,6 @@ namespace Sokvihittar.Crawlers.Requests.SubRequests
             products.AddRange(prevResult);
             while (products.Count < Limit)
             {
-
                 var requestUrl = GetNextPageUrl(prevResponse);
                 if (requestUrl == null)
                     break;
@@ -80,12 +78,12 @@ namespace Sokvihittar.Crawlers.Requests.SubRequests
                 prevResult = newProducts;
                 prevResponse = new HtmlDocument();
                 prevResponse.LoadHtml(currentResponse);
-
             }
             return products.Take(Limit).ToArray();
         }
 
-        public int RegionId {
+        public int RegionId
+        {
             get
             {
                 try
@@ -95,22 +93,23 @@ namespace Sokvihittar.Crawlers.Requests.SubRequests
                         .GetAttributeValue("href", "No value");
                     var elements = link.Split('/');
                     return Int32.Parse(elements[elements.Length - 2]);
-
                 }
                 catch (Exception)
                 {
                     throw new Exception("Error while determinating region id");
                 }
-                
-            }}
+            }
+        }
 
         protected override string GetNonFirstRequestUrl(int pageNum)
         {
             throw new Exception("Unexpected usage of method \"GetNonFirstRequestUrl\". Use \"GetNextPageUrl\" instead.");
         }
+
         protected override ProductInfo GetProductInfoFromNode(HtmlNode node)
         {
             var productId = node.Id.Replace("id_", "");
+
             //var nodes = node.SelectNodes(".//td");
             string imageUrl;
 
@@ -133,7 +132,7 @@ namespace Sokvihittar.Crawlers.Requests.SubRequests
             }
             var infoNode = node.SelectSingleNode(".//div[@class='desktop']");
             var adressNode = infoNode.SelectSingleNode(".//ul[@class='postAddressCol']");
-            var titleNode =adressNode.SelectSingleNode(".//li[@class='addressCell']").SelectSingleNode(".//a");
+            var titleNode = adressNode.SelectSingleNode(".//li[@class='addressCell']").SelectSingleNode(".//a");
             var title = HttpUtility.HtmlDecode(titleNode.InnerText).Trim().Replace("\t", "").Replace("\n", "");
             var productUrl = titleNode.GetAttributeValue("href", "No url");
             if (productUrl == "No url")
@@ -146,10 +145,11 @@ namespace Sokvihittar.Crawlers.Requests.SubRequests
                 HttpUtility.HtmlDecode(
                     adressNode.SelectSingleNode(".//li[@class='areaCell light']").InnerText).Split('–')[0]
                     .Trim();
-            var priceNode = infoNode.SelectSingleNode(".//ul[@class='priceCol']").ChildNodes.First();
-            var price = HttpUtility.HtmlDecode(priceNode.InnerText).Trim().Replace("\t", "").Replace("\n", "");
+            var priceNode = infoNode.SelectSingleNode(".//ul[@class='priceCol']");
+            var b = priceNode.ChildNodes.First();
+            var price = HttpUtility.HtmlDecode(b.InnerText).Trim().Replace("\t", "").Replace("\n", "");
             if (price == "")
-            throw new Exception("Invalid node data");
+                throw new Exception("Invalid node data");
             var area = HttpUtility.HtmlDecode(
                     adressNode.SelectSingleNode(".//li[@class='areaCell light']").InnerText).Split('–')[1];
             area = HttpUtility.HtmlDecode(area).Trim().Replace("\t", "").Replace("\n", "");
@@ -186,7 +186,7 @@ namespace Sokvihittar.Crawlers.Requests.SubRequests
         {
             try
             {
-                var link =  htmlNode.GetElementbyId("pagination").ChildNodes.Last(el => el.Name == "a").GetAttributeValue("href", "null");
+                var link = htmlNode.GetElementbyId("pagination").ChildNodes.Last(el => el.Name == "a").GetAttributeValue("href", "null");
                 if (link.StartsWith("/"))
                 {
                     link = String.Format("http://www.booli.se{0}", link);
