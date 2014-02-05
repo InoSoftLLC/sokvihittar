@@ -133,7 +133,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\CrawlerSubRequest.cs" />
-    <Compile Include="Common\ProductInfoExtensions.cs" />
+    <Compile Include="Common\ProductInfoHelper.cs" />
     <Compile Include="Common\SearchResultStatus.cs" />
     <Compile Include="Common\CrawlerResult.cs" />
     <Compile Include="Common\ICrawlerRequest.cs" />

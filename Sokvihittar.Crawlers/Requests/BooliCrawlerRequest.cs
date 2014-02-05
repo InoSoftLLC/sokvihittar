@@ -78,7 +78,7 @@ namespace Sokvihittar.Crawlers.Requests
                     searchWords.Add(word);
                 }
             }
-
+            
             var subRequests = searchWords.Select(searchWord => new BooliSubRequest(searchWord, Limit, types, false, ProductText));
             var results = new List<ProductInfo>();
             Parallel.ForEach(subRequests, subRequest =>

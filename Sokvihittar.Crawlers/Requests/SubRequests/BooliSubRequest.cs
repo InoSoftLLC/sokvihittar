@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using HtmlAgilityPack;
-using Microsoft.Ajax.Utilities;
 using Sokvihittar.Crawlers.Common;
 
 namespace Sokvihittar.Crawlers.Requests.SubRequests
@@ -197,6 +196,31 @@ namespace Sokvihittar.Crawlers.Requests.SubRequests
             {
                 return null;
             }
+        }
+
+        protected override IEnumerable<ProductInfo> ProccedResultPage(HtmlDocument htmlDoc)
+        {
+            var productNodes = new List<HtmlNode>();
+            GetProducts(htmlDoc.DocumentNode, ref productNodes);
+            var result = new List<ProductInfo>();
+            foreach (var productNode in productNodes)
+            {
+                try
+                {
+                    var info = GetProductInfoFromNode(productNode);
+                    if (IsStrictResults)
+                    {
+                        string[] searchWords = FullSerchText.Split(' ').Where(word => word.ToLower() != ProductText.ToLower()).ToArray();
+                        if (info.IsStrict(searchWords))
+                            result.Add(info);
+                    }
+                    result.Add(info);
+                }
+                catch (Exception)
+                {
+                }
+            }
+            return result;
         }
     }
 }
