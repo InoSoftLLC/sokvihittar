@@ -42,7 +42,8 @@ namespace Sokvihittar.Controllers
                 CrawlerSource.Mascus,
                 CrawlerSource.Pricerunner,
                 CrawlerSource.Tradera,
-                CrawlerSource.Uddevallatorget
+                CrawlerSource.Uddevallatorget,
+                CrawlerSource.Hastnet,
             }.ToArray();
 
             var strict = new List<CrawlerSource>()
@@ -58,7 +59,8 @@ namespace Sokvihittar.Controllers
                 CrawlerSource.Mascus,
                 CrawlerSource.Pricerunner,
                 CrawlerSource.Tradera,
-                CrawlerSource.Uddevallatorget
+                CrawlerSource.Uddevallatorget,
+                CrawlerSource.Hastnet,
             }.ToArray();
 
             var searchResult = Crawler.Search(searchText, limit.Value, sources, strict);

@@ -147,7 +147,9 @@
     <Compile Include="Requests\BarnebysCrawlerRequest.cs" />
     <Compile Include="Requests\AnnonsborsenCrawlerRequest.cs" />
     <Compile Include="Requests\BooliCrawlerRequest.cs" />
+    <Compile Include="Requests\hastnetCrawlerRequest.cs" />
     <Compile Include="Requests\SubRequests\BooliSubRequest.cs" />
+    <Compile Include="Requests\SubRequests\HastnetCrawlerSubRequest.cs" />
     <Compile Include="Requests\UddevallatorgetCrawlerRequest.cs" />
     <Compile Include="Requests\СlassiccarsCrawlerRequest.cs" />
     <Compile Include="Requests\BlocketCrawlerRequest.cs" />

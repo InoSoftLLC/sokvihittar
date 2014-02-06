@@ -13,6 +13,7 @@
         Fyndtorget = 8,
         Classiccars = 9,
         Uddevallatorget = 10,
-        Booli = 11,   
+        Booli = 11,
+        Hastnet = 12,
     }
 }

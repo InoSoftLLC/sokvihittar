@@ -15,7 +15,7 @@ namespace Sokvihittar.Crawlers.Requests.SubRequests
         /// </summary>
         private readonly string _category;
 
-        public СlassiccarsCrawlerSubRequest(string productText, int limit, string category, bool isStrictResults, string fullSerchText) : base(productText, limit,isStrictResults ,fullSerchText)
+        public СlassiccarsCrawlerSubRequest(string productText, int limit, string category, bool isStrictResults, string fullSerchText) : base(productText, limit,isStrictResults, fullSerchText)
         {
             _category = category;
         }

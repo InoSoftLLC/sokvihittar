@@ -123,6 +123,10 @@ namespace Sokvihittar.Crawlers
                         CrawlerSource.Booli,
                         (t, l, s) => new BooliCrawlerRequest(t, l, s)
                     },
+                    {
+                        CrawlerSource.Hastnet,
+                        (t, l, s) => new HastnetCrawlerRequest(t, l, s) 
+                    },
                 };
             }
         }
@@ -145,6 +149,7 @@ namespace Sokvihittar.Crawlers
                     CrawlerSource.Classiccars,
                     CrawlerSource.Uddevallatorget,
                     CrawlerSource.Booli,
+                    CrawlerSource.Hastnet, 
                 };
             }
         }

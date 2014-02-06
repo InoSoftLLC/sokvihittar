@@ -29,7 +29,10 @@ namespace Sokvihittar.Crawlers.Common
                         if (info.IsStrict(FullSerchText))
                             result.Add(info);
                     }
-                    result.Add(info);
+                    else
+                    {
+                        result.Add(info);
+                    }
                 }
                 catch (Exception)
                 {
